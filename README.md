@@ -19,7 +19,8 @@ Each folder has a README covering its purpose, dependencies, input/output interf
 
 ## Git Working Practice
 - `main` is the stable, integrated branch. Do not push to it directly.
-- Each sub-group works on a feature/module branch (e.g. `sg1/face-detection`) and merges through a reviewed pull request.
+- Each module has its own long-lived branch named after its folder: `module_sg1` … `module_sg5`, `embedded_sg6`.
+  Sub-groups work on their module branch (or short feature branches off it) and merge into `main` through a reviewed pull request.
 - Commit often, with messages that describe the technical change.
 - Do not commit raw datasets, trained-model caches or environment folders unless approved. Put download/setup instructions in `datasets/` instead.
 - Tag working versions at each integration gate (e.g. `gate-1`, `gate-2`) so the last known-good system is always recoverable.
