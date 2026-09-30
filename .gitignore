@@ -1,0 +1,29 @@
+# Environments
+.venv/
+venv/
+env/
+.conda/
+__pycache__/
+*.pyc
+node_modules/
+
+# Raw data and model caches (keep manifests/scripts in datasets/)
+datasets/raw/
+datasets/processed/
+*.zip
+*.tar.gz
+*.h5
+*.pt
+*.pth
+*.onnx
+*.tflite
+*.ckpt
+checkpoints/
+runs/
+wandb/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+.ipynb_checkpoints/
