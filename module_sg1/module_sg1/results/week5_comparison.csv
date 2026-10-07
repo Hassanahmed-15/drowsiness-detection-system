@@ -1,0 +1,3 @@
+configuration,confidence_threshold,total_frames,face_valid_frames,failed_frames,reliability_percent,avg_latency_ms,processing_fps
+Config A,0.50,571,571,0,100.0,22.48,44.49
+Config B,0.70,571,571,0,100.0,23.65,42.28
