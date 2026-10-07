@@ -3,7 +3,7 @@
 # (datasets/raw/ is git-ignored). Needs: curl, unzip, bsdtar (macOS built-in;
 # on Ubuntu/Jetson: sudo apt install libarchive-tools).  ~700 MB in total.
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/../raw" 2>/dev/null || mkdir -p "$(dirname "$0")/../raw" && cd "$(dirname "$0")/../raw"; pwd)/sg2"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)/raw/sg2"
 mkdir -p "$ROOT" && cd "$ROOT"
 
 # 1. Eyeblink8 + Talking Face blink annotations (Fogelton & Benesova) - TEST/DEV videos
