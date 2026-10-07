@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sg2_eye_state_v1",
+  "title": "SG2 eye-state record (sg2-v1), one per frame, SG2 -> SG4",
+  "type": "object",
+  "required": ["interface_version", "frame_id", "timestamp_ms", "eye_valid", "method", "left_ear", "right_ear",
+               "ear", "left_eye_state", "right_eye_state", "eye_state", "closed_score", "threshold",
+               "confidence", "closed_duration_ms", "blink_event", "blink_count", "long_closure_count"],
+  "properties": {
+    "interface_version": {"const": "sg2-v1"},
+    "frame_id": {"type": "integer", "minimum": 0, "description": "copied from SG1"},
+    "timestamp_ms": {"type": "number", "description": "copied from SG1"},
+    "eye_valid": {"type": "boolean", "description": "false when SG1 gave no valid face/eye points"},
+    "method": {"type": "string", "description": "name of the SG2 config that produced the record"},
+    "left_ear": {"type": ["number", "null"], "description": "driver's left eye aspect ratio"},
+    "right_ear": {"type": ["number", "null"]},
+    "ear": {"type": ["number", "null"], "description": "mean of left/right EAR (always geometric, for every method)"},
+    "left_eye_state": {"enum": ["open", "closed", "unknown"]},
+    "right_eye_state": {"enum": ["open", "closed", "unknown"]},
+    "eye_state": {"enum": ["open", "closed", "unknown"], "description": "fused decision used for blinks"},
+    "closed_score": {"type": ["number", "null"], "description": "method score, higher = more closed (EAR methods: -EAR or -EAR/open-level; CNN/blendshape: P(closed))"},
+    "threshold": {"type": ["number", "null"], "description": "threshold applied to this frame (adaptive method: per-driver EAR threshold)"},
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "distance of the score from the threshold, scaled to 0..1"},
+    "closed_duration_ms": {"type": "number", "minimum": 0, "description": "length of the ongoing closure (0 when open) - lets SG4 react before the eyes reopen"},
+    "blink_event": {
+      "description": "non-null only on the frame where a closure ENDS",
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object",
+         "required": ["type", "start_frame", "end_frame", "start_ms", "end_ms", "duration_ms"],
+         "properties": {
+           "type": {"enum": ["blink", "long_closure"], "description": "long_closure = closed longer than max_blink_ms (500 ms)"},
+           "start_frame": {"type": "integer"}, "end_frame": {"type": "integer"},
+           "start_ms": {"type": "number"}, "end_ms": {"type": "number"},
+           "duration_ms": {"type": "number"}}}
+      ]
+    },
+    "blink_count": {"type": "integer", "minimum": 0, "description": "cumulative blinks since reset"},
+    "long_closure_count": {"type": "integer", "minimum": 0}
+  }
+}
