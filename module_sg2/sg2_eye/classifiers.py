@@ -118,10 +118,12 @@ class CNNEyeState:
 
     name = "cnn"
 
-    def __init__(self, model_path, threshold=0.5, fusion="mean", **_):
+    def __init__(self, model_path, threshold=0.5, fusion="mean", providers=("CPUExecutionProvider",), **_):
         import onnxruntime as ort
 
-        self.session = ort.InferenceSession(str(model_path), providers=ort.get_available_providers())
+        so = ort.SessionOptions()
+        so.intra_op_num_threads = 1  # 2 tiny crops per frame: threading only adds overhead
+        self.session = ort.InferenceSession(str(model_path), so, providers=list(providers))
         self.input_name = self.session.get_inputs()[0].name
         self.threshold = float(threshold)
         self.fusion = fusion
