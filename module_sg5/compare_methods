@@ -1,0 +1,43 @@
+from mock_inputs import (
+    normal_case,
+    warning_case,
+    drowsy_case,
+    long_closure_case,
+    multiple_moderate_cues,
+    invalid_case
+)
+
+from decision_rules import make_decision
+from weighted_fusion import weighted_decision
+
+
+test_cases = {
+    "Normal": normal_case,
+    "Warning": warning_case,
+    "Drowsy": drowsy_case,
+    "Long Closure": long_closure_case,
+    "Multiple Moderate Cues": multiple_moderate_cues,
+    "Invalid": invalid_case
+}
+
+
+for name, data in test_cases.items():
+
+    rule_result = make_decision(data)
+    weighted_result = weighted_decision(data)
+
+    print("\nTest Case:", name)
+
+    print(
+        "Rule Based:",
+        rule_result["state"],
+        "Score:",
+        rule_result["drowsiness_score"]
+    )
+
+    print(
+        "Weighted:",
+        weighted_result["state"],
+        "Score:",
+        weighted_result["drowsiness_score"]
+    )
