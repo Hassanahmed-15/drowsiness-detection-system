@@ -1,6 +1,6 @@
 # Module — Sub-group 2: Eye State & Blink Analysis
 
-**Owner:** SG2: _member 1_, _member 2_ (fill in names / GitHub usernames)
+**Owner:** SG2: Hassan Ahmed ([@Hassanahmed-15](https://github.com/Hassanahmed-15))
 
 ## Purpose
 For every video frame, SG2 decides whether the driver's eyes are **open or closed**. From those decisions it detects **blinks** (closures ≤ 500 ms) and **long closures** (> 500 ms, possible micro-sleeps). It passes this per-frame eye evidence to SG4.
