@@ -1,0 +1,21 @@
+# SELECTED for Week 6 (decision 2026-10-07, see docs/week5_report.md section 6)
+# = Config C: per-driver adaptive EAR threshold. Best V1-compatible config on TEST:
+#   closed-frame F1 0.918, blink F1 0.944, 0.04 ms/frame. Thresholds tuned on DEV only.
+name: W6_selected_C_ear_adaptive_k0.425
+classifier:
+  method: ear_adaptive
+  k: 0.425
+  window_frames: 900
+  percentile: 80
+  warmup_frames: 30
+  fallback_threshold: 0.13
+  min_threshold: 0.1
+  max_threshold: 0.35
+  fusion: mean
+blink:
+  min_closed_frames: 1
+  max_blink_ms: 500
+  max_gap_frames: 2
+crop:
+  size: 32
+  scale: 1.6

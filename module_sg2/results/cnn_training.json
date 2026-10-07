@@ -1,0 +1,244 @@
+{
+  "date": "2026-10-07",
+  "device": "mps",
+  "seed": 477,
+  "epochs": 12,
+  "params": 72081,
+  "train_crops": 68039,
+  "val_crops": 4819,
+  "mrl_test_crops": 16886,
+  "mrl_test_subjects": [
+    "s0001",
+    "s0007",
+    "s0013",
+    "s0019",
+    "s0025",
+    "s0031"
+  ],
+  "mrl_val_subjects": [
+    "s0004",
+    "s0010",
+    "s0016",
+    "s0028"
+  ],
+  "best_val_f1_closed": 0.9903,
+  "log": [
+    {
+      "epoch": 1,
+      "train_loss": 0.3808,
+      "val_n": 4819,
+      "val_accuracy": 0.9631,
+      "val_precision_closed": 0.9681,
+      "val_recall_closed": 0.9814,
+      "val_f1_closed": 0.9747,
+      "val_false_closed_rate": 0.0853,
+      "val_false_open_rate": 0.0186
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.139,
+      "val_n": 4819,
+      "val_accuracy": 0.9415,
+      "val_precision_closed": 0.996,
+      "val_recall_closed": 0.923,
+      "val_f1_closed": 0.9581,
+      "val_false_closed_rate": 0.0098,
+      "val_false_open_rate": 0.077
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.1102,
+      "val_n": 4819,
+      "val_accuracy": 0.9647,
+      "val_precision_closed": 0.9571,
+      "val_recall_closed": 0.996,
+      "val_f1_closed": 0.9762,
+      "val_false_closed_rate": 0.1178,
+      "val_false_open_rate": 0.004
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.099,
+      "val_n": 4819,
+      "val_accuracy": 0.9832,
+      "val_precision_closed": 0.9858,
+      "val_recall_closed": 0.9911,
+      "val_f1_closed": 0.9884,
+      "val_false_closed_rate": 0.0378,
+      "val_false_open_rate": 0.0089
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.0877,
+      "val_n": 4819,
+      "val_accuracy": 0.9809,
+      "val_precision_closed": 0.9925,
+      "val_recall_closed": 0.9811,
+      "val_f1_closed": 0.9868,
+      "val_false_closed_rate": 0.0196,
+      "val_false_open_rate": 0.0189
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.0811,
+      "val_n": 4819,
+      "val_accuracy": 0.9788,
+      "val_precision_closed": 0.993,
+      "val_recall_closed": 0.9777,
+      "val_f1_closed": 0.9853,
+      "val_false_closed_rate": 0.0181,
+      "val_false_open_rate": 0.0223
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.0756,
+      "val_n": 4819,
+      "val_accuracy": 0.9859,
+      "val_precision_closed": 0.9894,
+      "val_recall_closed": 0.9911,
+      "val_f1_closed": 0.9903,
+      "val_false_closed_rate": 0.0279,
+      "val_false_open_rate": 0.0089
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.0695,
+      "val_n": 4819,
+      "val_accuracy": 0.9807,
+      "val_precision_closed": 0.9797,
+      "val_recall_closed": 0.994,
+      "val_f1_closed": 0.9868,
+      "val_false_closed_rate": 0.0544,
+      "val_false_open_rate": 0.006
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.0647,
+      "val_n": 4819,
+      "val_accuracy": 0.9846,
+      "val_precision_closed": 0.9855,
+      "val_recall_closed": 0.9934,
+      "val_f1_closed": 0.9895,
+      "val_false_closed_rate": 0.0385,
+      "val_false_open_rate": 0.0066
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.0607,
+      "val_n": 4819,
+      "val_accuracy": 0.9836,
+      "val_precision_closed": 0.9863,
+      "val_recall_closed": 0.9911,
+      "val_f1_closed": 0.9887,
+      "val_false_closed_rate": 0.0363,
+      "val_false_open_rate": 0.0089
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.0576,
+      "val_n": 4819,
+      "val_accuracy": 0.9846,
+      "val_precision_closed": 0.9905,
+      "val_recall_closed": 0.9883,
+      "val_f1_closed": 0.9894,
+      "val_false_closed_rate": 0.0249,
+      "val_false_open_rate": 0.0117
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.0553,
+      "val_n": 4819,
+      "val_accuracy": 0.9849,
+      "val_precision_closed": 0.988,
+      "val_recall_closed": 0.9911,
+      "val_f1_closed": 0.9896,
+      "val_false_closed_rate": 0.0317,
+      "val_false_open_rate": 0.0089
+    }
+  ],
+  "mrl_test": [
+    {
+      "subset": "all MRL test people",
+      "n": 16886,
+      "accuracy": 0.9809,
+      "precision_closed": 0.9824,
+      "recall_closed": 0.9806,
+      "f1_closed": 0.9815,
+      "false_closed_rate": 0.0187,
+      "false_open_rate": 0.0194
+    },
+    {
+      "subset": "no glasses",
+      "n": 13893,
+      "accuracy": 0.9845,
+      "precision_closed": 0.9864,
+      "recall_closed": 0.9809,
+      "f1_closed": 0.9837,
+      "false_closed_rate": 0.0122,
+      "false_open_rate": 0.0191
+    },
+    {
+      "subset": "glasses",
+      "n": 2993,
+      "accuracy": 0.9642,
+      "precision_closed": 0.9701,
+      "recall_closed": 0.9797,
+      "f1_closed": 0.9749,
+      "false_closed_rate": 0.0732,
+      "false_open_rate": 0.0203
+    },
+    {
+      "subset": "no reflections",
+      "n": 14683,
+      "accuracy": 0.9823,
+      "precision_closed": 0.9849,
+      "recall_closed": 0.9827,
+      "f1_closed": 0.9838,
+      "false_closed_rate": 0.0182,
+      "false_open_rate": 0.0173
+    },
+    {
+      "subset": "small reflections",
+      "n": 703,
+      "accuracy": 0.9673,
+      "precision_closed": 0.9667,
+      "recall_closed": 0.7342,
+      "f1_closed": 0.8345,
+      "false_closed_rate": 0.0032,
+      "false_open_rate": 0.2658
+    },
+    {
+      "subset": "big reflections",
+      "n": 1500,
+      "accuracy": 0.974,
+      "precision_closed": 0.9528,
+      "recall_closed": 0.9854,
+      "f1_closed": 0.9688,
+      "false_closed_rate": 0.0339,
+      "false_open_rate": 0.0146
+    },
+    {
+      "subset": "bad lighting",
+      "n": 13455,
+      "accuracy": 0.9826,
+      "precision_closed": 0.9836,
+      "recall_closed": 0.9852,
+      "f1_closed": 0.9844,
+      "false_closed_rate": 0.0207,
+      "false_open_rate": 0.0148
+    },
+    {
+      "subset": "good lighting",
+      "n": 3431,
+      "accuracy": 0.9744,
+      "precision_closed": 0.9745,
+      "recall_closed": 0.9518,
+      "f1_closed": 0.963,
+      "false_closed_rate": 0.0135,
+      "false_open_rate": 0.0482
+    }
+  ],
+  "onnx": "models/eye_state_cnn.onnx",
+  "onnx_bytes": 291473,
+  "train_seconds": 178
+}
