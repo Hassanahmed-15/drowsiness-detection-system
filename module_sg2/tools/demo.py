@@ -124,8 +124,19 @@ def to_canvas(pt, xf):
     return int(q[0]), int(q[1])
 
 
-def draw_eyes(img, block, rec, xf):
-    colour = {"open": GREEN, "closed": RED}.get(rec["eye_state"], GREY)
+def display_state(rec, max_blink_ms):
+    """What the viewer sees. The module output stays per-frame open/closed (a blink IS a short
+    closure); the display separates a normal blink from eyes kept shut longer than a blink."""
+    if rec["eye_state"] == "closed":
+        if rec["closed_duration_ms"] >= max_blink_ms:
+            return "EYES CLOSED", RED
+        return "BLINK", AMBER
+    if rec["eye_state"] == "open":
+        return "OPEN", GREEN
+    return "NO FACE", GREY
+
+
+def draw_eyes(img, block, rec, xf, colour):
     for key in ("left_eye_pts", "right_eye_pts"):
         pts = block.get(key)
         if not pts:
@@ -136,12 +147,12 @@ def draw_eyes(img, block, rec, xf):
             cv2.circle(img, tuple(int(v) for v in q), 3 if xf else 2, colour, -1, cv2.LINE_AA)
 
 
-def panel(rec, module, gt_now, score, fps, ms, crops, cfg_name, truth):
+def panel(rec, module, gt_now, score, fps, ms, crops, cfg_name, truth, shown, last_event):
     p = np.full((VIEW_H, PANEL_W, 3), DARK, np.uint8)
-    state = rec["eye_state"].upper()
-    colour = {"OPEN": GREEN, "CLOSED": RED}.get(state, GREY)
-    cv2.putText(p, "SG2 eye state", (16, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.55, GREY, 1, cv2.LINE_AA)
-    cv2.putText(p, state, (16, 78), cv2.FONT_HERSHEY_DUPLEX, 1.6, colour, 2, cv2.LINE_AA)
+    state, colour = shown
+    cv2.putText(p, f"SG2 eye state  (frame: {rec['eye_state']})", (16, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, GREY, 1,
+                cv2.LINE_AA)
+    cv2.putText(p, state, (16, 78), cv2.FONT_HERSHEY_DUPLEX, 1.6 if len(state) < 8 else 1.25, colour, 2, cv2.LINE_AA)
     y = 112
     if truth is not None:
         g = {1: "CLOSED", 0: "OPEN"}.get(gt_now, "not labelled")
@@ -153,7 +164,8 @@ def panel(rec, module, gt_now, score, fps, ms, crops, cfg_name, truth):
     d = module.last_decision or {}
     lines = [
         f"EAR {rec['ear'] if rec['ear'] is not None else '-'}   threshold {rec['threshold'] if rec['threshold'] is not None else '-'}",
-        f"CNN P(closed) {d['cnn_p_closed']:.2f}" if d.get("cnn_p_closed") is not None else "CNN check: only when EAR says closed",
+        (f"CNN P(closed) {d['cnn_p_closed']:.2f}" if d.get("cnn_p_closed") is not None else
+         "CNN check: skipped (no camera image)" if crops is None else "CNN check: only when EAR says closed"),
         f"closed for {rec['closed_duration_ms']:.0f} ms",
         f"blinks {rec['blink_count']}    long closures {rec['long_closure_count']}",
     ]
@@ -162,10 +174,11 @@ def panel(rec, module, gt_now, score, fps, ms, crops, cfg_name, truth):
     for line in lines:
         cv2.putText(p, line, (16, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 1, cv2.LINE_AA)
         y += 24
-    if rec["blink_event"]:
-        ev = rec["blink_event"]
-        cv2.putText(p, f"{ev['type'].replace('_', ' ')}: {ev['duration_ms']:.0f} ms", (16, y), cv2.FONT_HERSHEY_SIMPLEX,
-                    0.55, AMBER, 2, cv2.LINE_AA)
+    if last_event:  # stays visible for 2 s so a 0.2 s blink can actually be read
+        ev = last_event
+        kind = "blink" if ev["type"] == "blink" else "LONG CLOSURE"
+        cv2.putText(p, f"last event: {kind} {ev['duration_ms']:.0f} ms", (16, y), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.55, AMBER if ev["type"] == "blink" else RED, 2, cv2.LINE_AA)
     if crops is not None:
         cy = 304
         cv2.putText(p, "eye crops seen by the CNN (R | L)", (16, cy - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.42, GREY, 1)
@@ -189,7 +202,8 @@ def plot(hist, width):
     xs = lambda i: int(10 + i * (width - 20) / (HISTORY - 1))  # noqa: E731
     for i, h in enumerate(hist):
         if h["pred"]:
-            cv2.rectangle(g, (xs(i) - 2, 8), (xs(i) + 2, PLOT_H - 18), (40, 40, 110), -1)
+            band = (30, 90, 130) if not h.get("long") else (40, 40, 110)  # amber = blink, red = eyes closed
+            cv2.rectangle(g, (xs(i) - 2, 8), (xs(i) + 2, PLOT_H - 18), band, -1)
         if h["gt"] == 1:
             cv2.rectangle(g, (xs(i) - 2, PLOT_H - 14), (xs(i) + 2, PLOT_H - 6), (235, 160, 40), -1)
     for i in range(1, len(hist)):
@@ -198,7 +212,8 @@ def plot(hist, width):
             cv2.line(g, (xs(i - 1), ys(a["ear"])), (xs(i), ys(b["ear"])), WHITE, 1, cv2.LINE_AA)
         if a["thr"] is not None and b["thr"] is not None:
             cv2.line(g, (xs(i - 1), ys(a["thr"])), (xs(i), ys(b["thr"])), AMBER, 1, cv2.LINE_AA)
-    cv2.putText(g, "EAR (white), threshold (orange), SG2 closed (red band), ground-truth closed (blue ticks)",
+    cv2.putText(g, "EAR (white), threshold (orange), blink (amber band), eyes closed > 0.5 s (red band), "
+                   "ground-truth closed (blue ticks)",
                 (10, 16), cv2.FONT_HERSHEY_SIMPLEX, 0.4, GREY, 1, cv2.LINE_AA)
     return g
 
@@ -225,7 +240,7 @@ def main():
     truth = load_ground_truth(args)
     score, hist = Score(), deque(maxlen=HISTORY)
     out = open(args.out, "w") if args.out else None
-    writer, paused, n, t_last, fps = None, False, 0, time.perf_counter(), 0.0
+    writer, paused, n, t_last, fps, last_event = None, False, 0, time.perf_counter(), 0.0, None
     sg1_ms_avg, sg2_ms_avg = 0.0, 0.0
 
     if args.sg1_jsonl:
@@ -279,7 +294,13 @@ def main():
         gt_now = int(truth["label"][fid]) if truth is not None and fid < len(truth["label"]) else None
         if gt_now is not None and rec["eye_valid"]:
             score.add(gt_now, rec["eye_state"] == "closed")
-        hist.append({"ear": rec["ear"], "thr": rec["threshold"], "pred": rec["eye_state"] == "closed", "gt": gt_now})
+        hist.append({"ear": rec["ear"], "thr": rec["threshold"], "pred": rec["eye_state"] == "closed", "gt": gt_now,
+                     "long": rec["closed_duration_ms"] >= module.blink.max_blink_ms})
+        if rec["blink_event"]:
+            last_event = dict(rec["blink_event"], shown_at=rec["timestamp_ms"])
+        if last_event and rec["timestamp_ms"] - last_event["shown_at"] > 2000:
+            last_event = None
+        shown = display_state(rec, module.blink.max_blink_ms)
         if out:
             out.write(json.dumps(to_jsonable(rec)) + "\n")
         if args.print_json and (rec["blink_event"] or n % 30 == 0):
@@ -293,12 +314,13 @@ def main():
             xf = None
         else:
             view, xf = schematic(block)
-        draw_eyes(view, block, rec, xf)
+        draw_eyes(view, block, rec, xf, shown[1])
         scale = VIEW_H / view.shape[0]
         view = cv2.resize(view, (int(view.shape[1] * scale), VIEW_H))
         f = module.last_features
         crops = (f["right_crop"], f["left_crop"]) if f and f.get("left_crop") is not None else None
-        side = panel(rec, module, gt_now, score, fps, (sg1_ms_avg, sg2_ms_avg), crops, module.config_name, truth)
+        side = panel(rec, module, gt_now, score, fps, (sg1_ms_avg, sg2_ms_avg), crops, module.config_name, truth,
+                     shown, last_event)
         top = np.hstack([view, side])
         canvas = np.vstack([top, plot(hist, top.shape[1])])
         if args.save:
