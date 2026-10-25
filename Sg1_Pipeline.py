@@ -18,7 +18,7 @@ follows the spec:
   * JSON true/false and null (never 0/1, NaN, or last-good-value).
 
 Usage:
-  python sg1_face_pipeline.py --video "path/to/Video Project.mp4"
+  python Sg1_pipeline.py --video "path/to/Video Project.mp4"s
 """
 
 import argparse
