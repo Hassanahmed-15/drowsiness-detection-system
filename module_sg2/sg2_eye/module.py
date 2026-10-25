@@ -42,7 +42,7 @@ class EyeStateModule:
         crop = cfg.get("crop", {})
         self.crop_size = int(crop.get("size", 32))
         self.crop_scale = float(crop.get("scale", 1.6))
-        self.needs_crops = self.classifier.name == "cnn"
+        self.needs_crops = self.classifier.name == "cnn" or getattr(self.classifier, "cnn_available", False)
 
     def reset(self):
         """Call when a new driver / video starts."""
@@ -68,8 +68,9 @@ class EyeStateModule:
                 gray = frame if frame.ndim == 2 else cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 f["left_crop"] = eye_crop(gray, left, self.crop_size, self.crop_scale)
                 f["right_crop"] = eye_crop(gray, right, self.crop_size, self.crop_scale)
-            else:
-                return None
+            elif self.classifier.name == "cnn":
+                return None  # the CNN-only method cannot decide without the image
+            # (Config G without a frame: the CNN check is skipped -> same as Config C)
         return f
 
     def process(self, block, frame=None, crops=None):
@@ -77,6 +78,7 @@ class EyeStateModule:
         fid, ts = block["frame_id"], block["timestamp_ms"]
         f = self.features(block, frame, crops)
         decision = self.classifier(f) if f is not None else None
+        self.last_decision, self.last_features = decision, f  # for demos/debugging; not part of the record
         if decision is None:
             state, left_state, right_state = "unknown", "unknown", "unknown"
         else:

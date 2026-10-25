@@ -1,7 +1,7 @@
 # SG2 Interface — Eye State & Blink Analysis (`sg2-v1`)
 
 **Owner:** SG2. **Consumers:** SG4 (temporal analysis), SG5 (via SG4), SG6 (integration).
-**Status:** V1 proposed in Week 5. SG4 should confirm it. Any change after confirmation needs SG4's agreement.
+**Status (25 Oct 2026):** V1 proposed in Week 5 and unchanged since. Still waiting for SG4's confirmation (issue #7). Any change after confirmation needs SG4's agreement.
 
 ```
 SG1 face block (per frame)  ──►  SG2 EyeStateModule  ──►  SG2 eye-state record (per frame)  ──►  SG4
@@ -16,9 +16,9 @@ SG2 reads only these SG1 V1 fields. Everything else in the block is ignored.
 | `frame_id`, `timestamp_ms` | copied to the output; blink timing |
 | `face_valid` (falls back to `face_detected`) | if false, the eye state is `unknown` |
 | `left_eye_pts`, `right_eye_pts` | 6 ordered points each: p1 outer, p2/p3 upper lid, p4 inner, p5/p6 lower lid. Full-frame pixels. Driver's own left/right ([SG1 landmark map](../../module_sg1/)) |
-| BGR frame | **only** for the CNN method (Config D). SG2 cuts its own roll-corrected 32×32 eye crop from the eye points |
+| BGR frame | for the CNN check of the **primary config G** and for Config D/D2. SG2 cuts its own roll-corrected 32×32 eye crop from the eye points. Without a frame, G skips the check and behaves as the backup config C |
 
-SG2 does **not** need `landmarks`, `mouth_pts`, ROI boxes or `head_pose`. Head pose is used only offline, to sort test results by difficulty.
+SG2 does **not** need `landmarks`, `mouth_pts`, ROI boxes or `head_pose`. Head pose is used only offline, to sort test results by difficulty. Contract tests: `module_sg2/tests/test_contract.py`.
 
 **Optional, not part of V1:** `blendshapes: {"eyeBlinkLeft": float, "eyeBlinkRight": float}`. This is needed only by the experimental Config E. SG2 does not depend on it.
 
@@ -57,7 +57,17 @@ Schema: [`sg2_eye_state_v1.schema.json`](sg2_eye_state_v1.schema.json)
  "blink_count": 1, "long_closure_count": 0}
 ```
 
-## 3. Mock data (so SG4 does not have to wait for SG1/SG2)
+## 3. Real sample (no dataset download needed)
+
+[`examples/eb8_09_real_sg1.jsonl`](examples/eb8_09_real_sg1.jsonl) contains 600 real SG1 V1 blocks (20 s of Eyeblink8 TEST video 9, made with the SG1-compatible MediaPipe source). [`examples/eb8_09_real_sg1.labels.json`](examples/eb8_09_real_sg1.labels.json) holds the per-frame hand labels and the 8 annotated blinks. It contains landmark coordinates only, no images.
+
+```bash
+cd module_sg2
+python tools/demo.py --sg1-jsonl ../interfaces/sg2/examples/eb8_09_real_sg1.jsonl
+#   -> 600 frames | blinks 8 | annotated closures 8 | agree 99.6%  F1 closed 0.98
+```
+
+## 4. Mock data (so SG4 does not have to wait for SG1/SG2)
 
 Folder [`mock/`](mock/). Each file is 60 s at 30 fps, deterministic (seed 477). Made by `module_sg2/tools/make_mock_streams.py`.
 

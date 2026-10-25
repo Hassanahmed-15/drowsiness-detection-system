@@ -1,106 +1,122 @@
 # Module — Sub-group 2: Eye State & Blink Analysis
 
-**Owner:** SG2: Hassan Ahmed ([@Hassanahmed-15](https://github.com/Hassanahmed-15))
+**Owner:** SG2: Hassan Ahmed ([@Hassanahmed-15](https://github.com/Hassanahmed-15)) · **Status (25 Oct 2026, midterm):** working prototype, primary + backup selected, V1 contract tested · **Board:** [project #2](https://github.com/users/Hassanahmed-15/projects/2) (filter `Sub-group: SG2`)
 
-## Purpose
-For every video frame, SG2 decides whether the driver's eyes are **open or closed**. From those decisions it detects **blinks** (closures ≤ 500 ms) and **long closures** (> 500 ms, possible micro-sleeps). It passes this per-frame eye evidence to SG4.
+## Purpose and role in the system
+For every video frame, SG2 decides whether the driver's eyes are **open or closed**. It turns runs of closed frames into **blink** events (≤ 500 ms) and **long-closure** events (> 500 ms, a possible micro-sleep), and passes this per-frame eye evidence to SG4.
 
 ```
-SG1 (face + eye landmarks) ──► SG2 eye state + blinks ──► SG4 temporal analysis ──► SG5 decision/alert
+Camera ─► SG1 face + 6 eye points ─► SG2 eye state + blinks ─► SG4 temporal analysis ─► SG5 drowsiness decision ─► alert
 ```
-SG2 does not decide drowsiness. It only provides the visual cue.
+SG2 provides the visual cue only. It does **not** decide drowsiness: that is SG4/SG5's job.
+
+## Selected algorithm (midterm)
+
+| Role | Config | How it works | TEST closed-frame F1 [95% CI] | Blink F1 | Uses |
+|---|---|---|---|---|---|
+| **Primary** | **G** [`configs/primary.yaml`](configs/primary.yaml) | Adaptive EAR proposes "closed" (threshold = 0.425 × this driver's normal open-eye EAR). A small CNN looks at the eye crop and must **confirm** it | **0.947 [0.928–0.962]** | **0.951** | SG1 eye points + frame |
+| **Backup** | **C** [`configs/backup.yaml`](configs/backup.yaml) | Adaptive EAR only, with no model file (numpy + OpenCV). G switches to C automatically if the CNN or onnxruntime is unavailable | 0.918 [0.842–0.962] | 0.944 | SG1 eye points |
+
+**Why G:** it cuts false "closed" alarms by **74%** (80 → 21) for 5 fewer true closed frames. It fixes the main Week 5 weakness: with the head tilted ≥ 10° from the driver's normal pose, false alarms fall from **70 to 12**. It raises the worst test video (eb8_08) from 0.70 to 0.89, keeps the frozen V1 interface, and costs 0.06 ms/frame.
+**Caveat:** the paired bootstrap gives G > C in 79% of resamples, so the gain is likely but not statistically conclusive. That is why C stays as the fallback.
+Alternatives tested: A, B, D, D2, E, F (see [`docs/midterm_evaluation.md`](docs/midterm_evaluation.md) §2). E/F (MediaPipe eyeBlink) score as well as G but need a field SG1 does not send in V1.
 
 ## Dependencies
-- Python 3.12 (tested on macOS Apple M4, 7 Oct 2026)
-- Runtime: `numpy`, `opencv-python-headless`, `pyyaml`. Add `onnxruntime` for the CNN config. `mediapipe` is only needed to run directly on a video without SG1
-- Experiments: `pandas`, `scikit-learn`, `matplotlib`, `torch`
-- See [`requirements.txt`](requirements.txt). The models are not committed: `bash models/download_models.sh` fetches the MediaPipe landmark model, and `experiments/train_cnn.py` makes `models/eye_state_cnn.onnx`
+- Python ≥ 3.10 (tested 3.12 on macOS and 3.10 with Jetson-equivalent versions: all 24 tests pass on both)
+- Runtime: `numpy`, `pyyaml`, `opencv-python` (GUI window for the demo). Add `onnxruntime` for the primary's CNN check, and `mediapipe==1.1.0` to run directly on a camera or video
+- Tests: `jsonschema`, `pytest` · Experiments only: `pandas`, `scikit-learn`, `matplotlib`, `torch`
+- [`requirements.txt`](requirements.txt). Jetson notes, including a MediaPipe/OpenCV install trap: [`docs/jetson_deployment.md`](docs/jetson_deployment.md)
 
-## Input / Output Interface
-Full contract: [`interfaces/sg2/README.md`](../interfaces/sg2/README.md) · schema [`sg2_eye_state_v1.schema.json`](../interfaces/sg2/sg2_eye_state_v1.schema.json)
+## Input / Output Interface (V1)
+Contract: [`interfaces/sg2/README.md`](../interfaces/sg2/README.md) · schema [`sg2_eye_state_v1.schema.json`](../interfaces/sg2/sg2_eye_state_v1.schema.json) · tests [`tests/test_contract.py`](tests/test_contract.py)
 
-- **Input (SG1 V1, unchanged):** `frame_id`, `timestamp_ms`, `face_valid`, `left_eye_pts`, `right_eye_pts`. These are 6 ordered points per eye (p1 outer, p2/p3 upper lid, p4 inner, p5/p6 lower lid) in full-frame pixels, using the driver's own left/right. The BGR frame is needed only for the CNN config.
-- **Output (`sg2-v1`, one per frame):** `left_ear`, `right_ear`, `ear`, `left_eye_state`, `right_eye_state`, `eye_state` (`open`/`closed`/`unknown`), `closed_score`, `threshold`, `confidence`, `closed_duration_ms`, `blink_event` (only on the frame where a closure ends), `blink_count`, `long_closure_count`.
-- **Mock data** for SG4 (and SG1-format input for SG2): [`interfaces/sg2/mock/`](../interfaces/sg2/mock/)
+- **Input (SG1 V1, unchanged):** `frame_id`, `timestamp_ms`, `face_valid`, `left_eye_pts`, `right_eye_pts` (6 ordered points: p1 outer, p2/p3 upper lid, p4 inner, p5/p6 lower lid, full-frame pixels, driver's own left/right), plus the BGR frame for the CNN check.
+- **Output (`sg2-v1`, one record per frame):** `left_ear`, `right_ear`, `ear`, `left_eye_state`, `right_eye_state`, `eye_state` (`open`/`closed`/`unknown`), `closed_score`, `threshold`, `confidence`, `closed_duration_ms`, `blink_event` (on the frame a closure ends), `blink_count`, `long_closure_count`.
 
 ```python
 from sg2_eye import EyeStateModule
-sg2 = EyeStateModule("configs/w6_selected.yaml")
-record = sg2.process(sg1_block, frame)      # frame is optional except for the CNN config
+sg2 = EyeStateModule("configs/primary.yaml")
+record = sg2.process(sg1_block, frame)      # frame optional: without it the primary acts as the backup
 ```
 
 ## How to Run
 ```bash
 # setup (from the repo root)
-python3.12 -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r module_sg2/requirements.txt
-bash module_sg2/models/download_models.sh
-cd module_sg2
+cd module_sg2 && bash models/download_models.sh        # landmark model + SG2 CNNs (SHA-256 checked)
 
-# 1. self-checks (no data needed)
-python tests/test_sg2.py
+python -m pytest tests -q                               # 24 checks, no data or camera needed
 
-# 2. run on SG1 output (here: the mock SG1 stream)
-python tools/run_sg2.py --sg1-jsonl ../interfaces/sg2/mock/mock_sg1_drowsy.jsonl \
-       --config configs/w6_selected.yaml --out /tmp/sg2_out.jsonl
-#   -> [sg2] 1800 frames, ... blinks=14, long_closures=3
+# DEMO (window: q quit, space pause, r reset; add --no-window --save demo.mp4 when headless)
+python tools/demo.py --source 0                                              # live webcam
+python tools/demo.py --sg1-jsonl ../interfaces/sg2/examples/eb8_09_real_sg1.jsonl   # real test data + hand labels
+python tools/demo.py --sg1-jsonl ../interfaces/sg2/mock/mock_sg1_drowsy.jsonl       # mock SG1: blinks + long closures
+python tools/demo.py --source <eyeblink8 .avi>                               # full test video + hand labels (.tag)
+python tools/demo.py --source csi                                            # Jetson CSI camera
 
-# 3. run directly on a driver video (uses the SG1-compatible landmark source) + demo overlay
-python tools/run_sg2.py --video driver.mp4 --config configs/w6_selected.yaml \
-       --out results/driver_sg2.jsonl --overlay /tmp/driver_overlay.mp4
+# SG2 as a pipeline step (JSONL in -> JSONL out)
+python tools/run_sg2.py --sg1-jsonl ../interfaces/sg2/mock/mock_sg1_drowsy.jsonl --config configs/primary.yaml --out /tmp/sg2.jsonl
 
-# 4. reproduce the Week 5 experiment (~700 MB download, ~25 min on a laptop)
+# reproduce all experiments (~700 MB download, ~35 min on a laptop)
 bash ../datasets/sg2/download_sg2_data.sh
-python experiments/prepare_videos.py --workers 4   # landmarks/crops cache (+ low-light copy)
-python experiments/train_cnn.py                    # Config D model -> models/eye_state_cnn.onnx
-python experiments/evaluate.py                     # tables + figures -> results/
+python experiments/prepare_videos.py --workers 4        # landmarks + crops cache (+ low-light copy)
+python experiments/train_cnn.py                         # CNN v1 (Week 5)
+python experiments/train_cnn.py --with-dev-video        # CNN v2 (midterm)
+python experiments/evaluate.py                          # Week 5 tables + figures
+python experiments/evaluate_midterm.py                  # midterm tables, CIs, figures
+
+# Jetson / camera readiness (writes evidence files)
+python tools/check_env.py --out ../embedded_sg6/reports/env_$(hostname).md
+python tools/camera_check.py --source 0 --pipeline      # or --source csi
 ```
 
-| Config file | Method |
-|---|---|
-| `configs/baseline_w4_ear_fixed.yaml` | **A**: Week 4 baseline, EAR < 0.20 |
-| `configs/w5_B_ear_fixed_tuned.yaml` | **B**: EAR < 0.13 (tuned on DEV) |
-| `configs/w5_C_ear_adaptive.yaml` | **C**: adaptive per-driver EAR threshold (k = 0.425) |
-| `configs/w5_D_cnn.yaml` | **D**: CNN on the 32×32 eye crop (needs the ONNX model) |
-| `configs/w5_E_blendshape.yaml` | **E**: MediaPipe eyeBlink blendshape (needs a non-V1 SG1 field) |
-| **`configs/w6_selected.yaml`** | **selected for Week 6 = C** |
-
 ## Test Data
-Public, frame-annotated blink videos. Download them with [`datasets/sg2/download_sg2_data.sh`](../datasets/sg2/); details are in [`datasets/sg2/README.md`](../datasets/sg2/README.md).
-- **DEV (tuning):** Talking Face + Eyeblink8 videos 1, 2, 3
-- **TEST (reporting):** Eyeblink8 videos 4, 8, 9, 10, 11 (video 11: driver wears glasses). 35,174 frames, 852 closed frames, 217 blinks
-- **TEST low-light:** the same videos, synthetically darkened
-- **CNN training:** MRL Eye Dataset (split by person) + CEW eye patches
+Public, frame-annotated blink videos: [`datasets/sg2/README.md`](../datasets/sg2/README.md).
+- **DEV (tuning only):** Talking Face + Eyeblink8 videos 1, 2, 3 (video 3 is held out of CNN v2 training and used to tune the primary's CNN threshold)
+- **TEST (reporting only):** Eyeblink8 videos 4, 8, 9, 10, 11 (video 11 has glasses). 35,174 frames, 852 closed frames, 217 blinks. Also a synthetic low-light copy
+- **CNN training:** MRL Eye (split by person) + CEW. CNN v2 adds webcam crops of DEV videos talking, 1, 2
+- **In the repo:** 20 s real sample [`interfaces/sg2/examples/`](../interfaces/sg2/examples/) and 3 mock scenarios [`interfaces/sg2/mock/`](../interfaces/sg2/mock/)
 
-## Current Performance
-Measured 7 Oct 2026 on the Eyeblink8 TEST videos. Full tables are in [`results/week5_comparison.csv`](results/week5_comparison.csv) and [`docs/week5_report.md`](docs/week5_report.md).
+## Current Performance (TEST, measured 25 Oct 2026)
 
-| Config | F1 closed frames | False-closed rate | False-open rate | Blink F1 | SG2 time / frame |
-|---|---|---|---|---|---|
-| A baseline EAR 0.20 | 0.361 | 9.14% | 0.0% | 0.857 | 0.012 ms |
-| B EAR 0.13 | 0.833 | 0.89% | 4.1% | 0.934 | 0.012 ms |
-| **C adaptive EAR (selected)** | **0.918** | **0.24%** | 7.3% | **0.944** | 0.040 ms |
-| D CNN | 0.872 | 0.05% | 21.1% | 0.901 | 0.46 ms |
-| E blendshape (needs SG1 change) | 0.945 | 0.19% | 3.9% | 0.943 | 0.012 ms |
+| Config | F1 closed [95% CI] | False-closed | False-open | Blink F1 | Low-light F1 | SG2 ms/frame* |
+|---|---|---|---|---|---|---|
+| A Week 4 baseline EAR 0.20 | 0.361 [0.284–0.466] | 3,020 frames | 0 | 0.857 | 0.350 | 0.012 |
+| C adaptive EAR (**backup**) | 0.918 [0.842–0.962] | 80 | 62 | 0.944 | 0.891 | 0.043 |
+| **G adaptive EAR + CNN check (primary)** | **0.947 [0.928–0.962]** | **21** | 67 | **0.951** | 0.889 | 0.055 |
+| E MediaPipe eyeBlink (needs SG1 change) | 0.945 [0.910–0.972] | 62 | 33 | 0.943 | 0.895 | 0.012 |
 
-Timings were measured on an Apple M4 CPU and do not include SG1's landmark step (~4.1 ms/frame). They are not Jetson numbers.
+\*SG2 only, Apple M4 CPU. It excludes landmarks (~3.5–7 ms, SG1's job). Live webcam end-to-end: 29.5 fps (camera-limited). Not yet measured on Jetson.
 
-## Current Limitations
-- Looking down (|pitch| ≥ 15°) is the weakest case for EAR methods (C: F1 0.75).
-- Only 4 TEST people (1 with glasses). No real in-car, night or infrared video yet. Low light is synthetic.
-- The adaptive threshold needs about 1 s of open-eye frames to warm up. Until then it uses the fixed 0.13 threshold.
-- The CNN (D) loses recall on webcam video because of domain shift from its infrared/photo training data.
-- Not yet measured on a Jetson (planned with SG6 in Week 6).
+## Evidence links
+| What | Where |
+|---|---|
+| Midterm rubric → evidence map + demo script | [`docs/midterm_evaluation.md`](docs/midterm_evaluation.md) |
+| Primary vs backup tables, CIs, paired tests | [`results/midterm/`](results/midterm/) ([CI figure](results/midterm/figures/confidence_intervals.png), [difficult cases](results/midterm/figures/difficult_cases.png)) |
+| Week 5 experiment (A–E), failure cases | [`docs/week5_report.md`](docs/week5_report.md), [`results/`](results/), [`results/figures/failure_cases.png`](results/figures/failure_cases.png) |
+| Reference implementations (ranked, executed) | [`docs/reference_screening/`](docs/reference_screening/) |
+| Decisions and dependencies | [`docs/decision_log.md`](docs/decision_log.md), [team tracker](../documentation/coordination/interface_dependency_tracker.md) |
+| Jetson / camera readiness | [`docs/jetson_deployment.md`](docs/jetson_deployment.md), [`docs/env_report_dev_pc.md`](docs/env_report_dev_pc.md) |
+| Viva questions | [`docs/viva_prep.md`](docs/viva_prep.md) |
+
+## Current Limitations / failure cases
+- **Not run on the Jetson yet** (no board access for SG2). The tools are ready ([`docs/jetson_deployment.md`](docs/jetson_deployment.md)).
+- Only 4 TEST people (1 with glasses). No in-car, night or infrared footage. Low light is synthetic.
+- The primary misses ~8% of closed frames (mostly half-closed frames at the start or end of a blink). Blink recall is 93%.
+- The adaptive threshold calibrates on the first ~1 s of open eyes. If the driver starts with closed or downcast eyes, the first seconds can be wrong. A 0.10 lower clip limits this.
+- CNN v2 alone over-calls "closed" on new people (Config D2 F1 0.70), so it is used only as a confirmation step.
+- The SG4 sign-off on `sg2-v1` is still pending (issue #7).
 
 ## Folder layout
 ```
 module_sg2/
-├── sg2_eye/            # the module: geometry (EAR, crops), classifiers A–E, blink detector, EyeStateModule
-├── configs/            # one YAML per configuration (A–E) + w6_selected.yaml
-├── tools/              # run_sg2.py (CLI), sg1_landmarks.py (SG1-compatible source), make_mock_streams.py
-├── experiments/        # prepare_videos.py, train_cnn.py, evaluate.py, common.py (split + labels)
-├── results/            # Week 5 CSVs + figures/
-├── tests/              # test_sg2.py
-├── models/             # downloaded / trained models (not committed)
-└── docs/               # week5_report.md, viva_prep.md, w5_board_tasks.md, reference_screening/
+├── sg2_eye/      the module: geometry (EAR, crops), classifiers A–G, blink detector, EyeStateModule
+├── configs/      primary.yaml (G), backup.yaml (C), Week 5 + midterm configs
+├── tools/        demo.py, run_sg2.py, camera.py, camera_check.py, check_env.py, sg1_landmarks.py, make_mock_streams.py
+├── experiments/  prepare_videos.py, train_cnn.py, evaluate.py, evaluate_midterm.py, export_real_sample.py
+├── results/      Week 5 results, results/midterm/ (midterm)
+├── tests/        test_sg2.py, test_contract.py (24 checks)
+├── models/       download_models.sh (models are not committed)
+└── docs/         midterm_evaluation.md, decision_log.md, jetson_deployment.md, week5_report.md, viva_prep.md, reference_screening/
 ```

@@ -181,7 +181,78 @@ class BlendshapeEyeState:
         }
 
 
-CLASSIFIERS = {c.name: c for c in (EARFixed, EARAdaptive, CNNEyeState, BlendshapeEyeState)}
+class EARAdaptiveCNNCheck(EARAdaptive):
+    """Config G (midterm): adaptive EAR proposes, the CNN must confirm.
+
+    A frame is closed only if the adaptive-EAR rule says closed AND the
+    eye-crop CNN gives P(closed) > cnn_threshold. The CNN acts as a second
+    opinion that removes EAR false alarms (narrowed eyes when the head tilts
+    or the driver smiles). Uses only SG1 V1 inputs (eye points + frame).
+    """
+
+    name = "ear_adaptive_cnn_check"
+
+    def __init__(self, model_path, cnn_threshold=0.5, **kw):
+        super().__init__(**kw)
+        self.cnn_threshold = float(cnn_threshold)
+        try:
+            self.cnn = CNNEyeState(model_path, threshold=cnn_threshold, fusion=kw.get("fusion", "mean"))
+        except Exception as exc:  # model file or onnxruntime missing -> backup behaviour (Config C)
+            import sys
+
+            print(f"[sg2] CNN check unavailable ({exc.__class__.__name__}: {exc}); "
+                  f"falling back to adaptive EAR only (backup Config C)", file=sys.stderr)
+            self.cnn = None
+
+    @property
+    def cnn_available(self):
+        return self.cnn is not None
+
+    def __call__(self, f):
+        d = super().__call__(f)
+        if not d["closed"] or self.cnn is None or f.get("left_crop") is None:
+            d["cnn_p_closed"] = None
+            return d
+        p = self.cnn(f)["closed_score"]
+        d["cnn_p_closed"] = p
+        if p <= self.cnn_threshold:  # CNN vetoes the EAR "closed" call
+            d.update(closed=False, left_closed=False, right_closed=False,
+                     margin=min(d["margin"], abs(p - self.cnn_threshold) / 0.25))
+        return d
+
+
+class EARAdaptiveBlendshapeFusion(EARAdaptive):
+    """Config F (midterm): score fusion of adaptive EAR and the eyeBlink blendshape.
+
+    closedness = w * clip(1 - EAR / open_level, 0, 1) + (1 - w) * eyeBlink,
+    closed if closedness > threshold. Needs the non-V1 `blendshapes` field.
+    """
+
+    name = "ear_adaptive_blendshape"
+
+    def __init__(self, weight=0.5, fused_threshold=0.5, **kw):
+        super().__init__(**kw)
+        self.weight = float(weight)
+        self.fused_threshold = float(fused_threshold)
+
+    def __call__(self, f):
+        b = f.get("blendshapes") or {}
+        left, right = b.get("eyeBlinkLeft"), b.get("eyeBlinkRight")
+        if left is None or right is None:
+            return None
+        ear = fuse(f["left_ear"], f["right_ear"], f["left_width"], f["right_width"], self.fusion)
+        thr = self.current_threshold()
+        open_level = thr / self.k
+        self.history.append(ear)
+        ear_closed = float(np.clip(1.0 - ear / open_level, 0.0, 1.0)) if open_level > 0 else 0.0
+        score = self.weight * ear_closed + (1.0 - self.weight) * 0.5 * (left + right)
+        closed = score > self.fused_threshold
+        return {"closed_score": score, "left_closed": closed, "right_closed": closed, "closed": closed,
+                "threshold": self.fused_threshold, "margin": abs(score - self.fused_threshold) / 0.25}
+
+
+CLASSIFIERS = {c.name: c for c in (EARFixed, EARAdaptive, CNNEyeState, BlendshapeEyeState,
+                                   EARAdaptiveCNNCheck, EARAdaptiveBlendshapeFusion)}
 
 
 def build_classifier(cfg):

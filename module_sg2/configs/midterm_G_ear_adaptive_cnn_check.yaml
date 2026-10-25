@@ -1,0 +1,22 @@
+# Config G (midterm) - adaptive EAR (Config C) confirmed by CNN v2; V1 inputs only
+# cnn_threshold tuned on eb8_03 only (held out of CNN v2 training)
+name: G_ear_adaptive_cnn_check_p0.525
+classifier:
+  method: ear_adaptive_cnn_check
+  model_path: models/eye_state_cnn_v2.onnx
+  cnn_threshold: 0.525
+  k: 0.425
+  window_frames: 900
+  percentile: 80
+  warmup_frames: 30
+  fallback_threshold: 0.13
+  min_threshold: 0.1
+  max_threshold: 0.35
+  fusion: mean
+blink:
+  min_closed_frames: 1
+  max_blink_ms: 500
+  max_gap_frames: 2
+crop:
+  size: 32
+  scale: 1.6
