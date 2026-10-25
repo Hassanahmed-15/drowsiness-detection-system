@@ -70,7 +70,7 @@ All configs use the **same** SG1-compatible landmarks on the **same** 5 TEST vid
 | 4 | "Live: I blink, then close my eyes for 2 seconds." Face the camera; keep eyes open for the first second (calibration) | `python tools/demo.py --source 0` | OPEN/CLOSED follows the eyes, blink count rises, the 2 s closure is reported as a **long closure** |
 | 5 | "Without SG1 or a camera, using the agreed mock input." | `python tools/demo.py --sg1-jsonl ../interfaces/sg2/mock/mock_sg1_drowsy.jsonl` | 14 blinks + 3 long closures, agree 100% |
 | 6 | "Why G is primary and C is backup." | open `results/midterm/figures/confidence_intervals.png` | G has the highest F1 and the narrowest CI |
-| 7 | "Where it fails." | open `results/midterm/figures/difficult_cases.png` and `results/figures/failure_cases.png` | head pitch, glasses, low light, half-closed frames |
+| 7 | "Where it fails, and what we fixed." | open `results/midterm/figures/difficult_cases.png`, `results/figures/failure_cases.png`, `results/occlusion/figures/niqab_f1.png` | head pitch, glasses, low light, half-closed frames. **Niqab:** the face was lost at confidence 0.5; at 0.2 eyes are found in 98–100% of frames |
 | 8 | "The output SG4 receives." | `python tools/run_sg2.py --sg1-jsonl ../interfaces/sg2/examples/eb8_09_real_sg1.jsonl --config configs/primary.yaml --out /tmp/sg2.jsonl && head -3 /tmp/sg2.jsonl` | `sg2-v1` JSON records |
 
 Optional, if the dataset is downloaded: `python tools/demo.py --source ../datasets/raw/sg2/eyeblink8/eyeblink8/8/27122013_151644_cam.avi` (the hardest TEST video, with hand labels).
@@ -80,6 +80,7 @@ Optional, if the dataset is downloaded: `python tools/demo.py --source ../datase
 ---
 
 ## 4. Known limitations (say them before you are asked)
+0. **Niqab / face covering:** SG2 needs SG1 to find the face. Under a simulated niqab, SG1's confidence 0.5 lost 28% of the frames on the glasses video. Our live tools use 0.2, which loses 1.7% with the same eye-point accuracy. Primary F1 is 0.91 and blink F1 0.93 with a niqab ([`results/occlusion/`](../results/occlusion/)). Real fabrics and lighting are not tested yet.
 1. Not yet run on the Jetson. The scripts are ready (§1C) and the code passes all tests with the Jetson's Python 3.10 / onnxruntime 1.23.2.
 2. TEST has only 4 people (1 with glasses), recorded indoors. Low light is synthetic.
 3. G still misses ~8% of closed frames (mostly half-closed frames at blink edges). Blink recall is 93%.

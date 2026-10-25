@@ -49,7 +49,7 @@ cd module_sg2 && bash models/download_models.sh        # landmark model + SG2 CN
 python -m pytest tests -q                               # 24 checks, no data or camera needed
 
 # DEMO (window: q quit, space pause, r reset; add --no-window --save demo.mp4 when headless)
-python tools/demo.py --source 0                                              # live webcam
+python tools/demo.py --source 0                                              # live webcam (face confidence 0.2: works with a niqab)
 python tools/demo.py --sg1-jsonl ../interfaces/sg2/examples/eb8_09_real_sg1.jsonl   # real test data + hand labels
 python tools/demo.py --sg1-jsonl ../interfaces/sg2/mock/mock_sg1_drowsy.jsonl       # mock SG1: blinks + long closures
 python tools/demo.py --source <eyeblink8 .avi>                               # full test video + hand labels (.tag)
@@ -89,6 +89,19 @@ Public, frame-annotated blink videos: [`datasets/sg2/README.md`](../datasets/sg2
 
 \*SG2 only, Apple M4 CPU. It excludes landmarks (~3.5–7 ms, SG1's job). Live webcam end-to-end: 29.5 fps (camera-limited). Not yet measured on Jetson.
 
+### Drivers who wear a niqab (face covered except the eyes)
+Tested on the same 5 TEST videos with a synthetic niqab: dark fabric over the head, face and neck, with an eye slit placed from the hand-annotated eye corners (`experiments/occlusion.py`). Results: [`results/occlusion/`](results/occlusion/).
+
+| Face-detection confidence | Frames with a face found | Closed frames with no answer | Primary F1 | Primary blink recall / F1 |
+|---|---|---|---|---|
+| 0.5 (SG1's current setting) | 93.6% (glasses + niqab video: **72%**) | 100 | 0.921 | 0.834 / 0.889 |
+| **0.2 (SG2 live tools default)** | **99.3%** (glasses + niqab video: **98%**) | **34** | 0.907 | **0.894 / 0.928** |
+| normal faces, 0.5 → 0.2 | 99.7% → 99.7% | 0 → 0 | 0.947 → 0.948 | 0.931 → 0.931 |
+
+- When a face is found, the eye points stay accurate under the niqab (median corner error 2.7% of the eye distance). SG2's EAR-based primary and backup keep working.
+- The problem is **finding the face**. Lowering MediaPipe's confidence to 0.2 recovered 94% of the lost frames. The cost is a few more false "faces" when nothing is visible (+10 of 600 frames in the worst video).
+- CNN-only methods fail under a niqab (D/D2 F1 ≈ 0.16–0.21: the dark fabric at the crop edge confuses them). This is another reason the CNN only confirms, never decides alone.
+
 ## Evidence links
 | What | Where |
 |---|---|
@@ -97,6 +110,7 @@ Public, frame-annotated blink videos: [`datasets/sg2/README.md`](../datasets/sg2
 | Week 5 experiment (A–E), failure cases | [`docs/week5_report.md`](docs/week5_report.md), [`results/`](results/), [`results/figures/failure_cases.png`](results/figures/failure_cases.png) |
 | Reference implementations (ranked, executed) | [`docs/reference_screening/`](docs/reference_screening/) |
 | Decisions and dependencies | [`docs/decision_log.md`](docs/decision_log.md), [team tracker](../documentation/coordination/interface_dependency_tracker.md) |
+| Niqab / face covering | [`results/occlusion/`](results/occlusion/), [`experiments/evaluate_occlusion.py`](experiments/evaluate_occlusion.py) |
 | Jetson / camera readiness | [`docs/jetson_deployment.md`](docs/jetson_deployment.md), [`docs/env_report_dev_pc.md`](docs/env_report_dev_pc.md) |
 | Viva questions | [`docs/viva_prep.md`](docs/viva_prep.md) |
 
@@ -106,6 +120,7 @@ Public, frame-annotated blink videos: [`datasets/sg2/README.md`](../datasets/sg2
 - The primary misses ~8% of closed frames (mostly half-closed frames at the start or end of a blink). Blink recall is 93%.
 - The adaptive threshold calibrates on the first ~1 s of open eyes. If the driver starts with closed or downcast eyes, the first seconds can be wrong. A 0.10 lower clip limits this.
 - CNN v2 alone over-calls "closed" on new people (Config D2 F1 0.70), so it is used only as a confirmation step.
+- **Niqab / face covering:** if the face detector finds no face, SG2 has no eye points and reports `unknown` (shown as NO FACE). At confidence 0.2 this drops to 0.7% of frames on the simulated niqab, but real fabrics and lighting are untested. SG1's module still uses 0.5 (issue raised with SG1).
 - The SG4 sign-off on `sg2-v1` is still pending (issue #7).
 
 ## Folder layout

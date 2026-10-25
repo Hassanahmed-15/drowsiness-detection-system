@@ -63,6 +63,9 @@ The demo compares every frame with the hand label and shows "correct" or "wrong"
 - Very dark video (synthetic low light: F1 0.89).
 - The first second, while the adaptive threshold calibrates.
 
+**14b. Does it work for a driver who wears a niqab?**
+SG2 only needs the eyes, but SG1's face detector must first find the face. With only the eyes visible, MediaPipe at confidence 0.5 lost the face in 28% of frames on our glasses + niqab test video. At 0.2 it lost 1.7%, and the eye points were just as accurate. With the face found, our primary still gets F1 0.91 and blink F1 0.93. Our live tools use 0.2, and we asked SG1 to consider it. The test used a simulated niqab, so real fabrics and lighting still need testing.
+
 ## Interface, code, Jetson
 
 **15. What is the V1 contract and how do you check it?**

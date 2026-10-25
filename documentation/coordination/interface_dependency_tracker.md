@@ -33,7 +33,8 @@ How SG2's output feeds SG5's expected inputs, through SG4:
 | SG2 → SG4 handover | SG4 confirms `sg2-v1` (#7) | SG4 | 7 Oct | SG4 may expect different field names | mock streams published (`interfaces/sg2/mock/`) |
 | SG5 inputs | SG4 output definition | SG4 | — | SG5 is built on assumptions | SG5 mock inputs |
 | Jetson deployment of every module | board set up, OS/storage/stack verified, camera tested | SG6 | — | Part C of the midterm (5 marks) at risk | SG2 scripts `check_env.py` and `camera_check.py` are ready to run on the board |
-| Optional V1.1 `blendshapes` field (2 floats) | SG1 agreement | SG1 | 7 Oct | SG2 Configs E/F cannot be used | primary G does not need it (#18) |
+| Drivers wearing a niqab: face often not found | SG1 detection confidence (0.5 now). SG2's evidence: 0.2 cuts lost frames 28% → 1.7% under a simulated niqab | SG1 | 25 Oct | SG2 gets no eye points → `unknown` for those drivers | SG2 live tools use 0.2 (`module_sg2/results/occlusion/`) |
+| Optional V1.1 `blendshapes` field (2 floats) | SG1 agreement | SG1 | 7 Oct | SG2 Configs E/F cannot be used | primary G does not need it (#18, closed) |
 | Team V1 interface spec document | copy committed to `interfaces/` | team lead | — | modules cannot be checked against it in the repo | each module documents its own I/O |
 
 ## 3. Merge status (25 Oct)

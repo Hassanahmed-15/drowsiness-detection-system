@@ -4,6 +4,7 @@ Each technical decision, when it was made, the evidence behind it, and where it 
 
 | Date | Decision | Evidence / reason | Where |
 |---|---|---|---|
+| 2026-10-25 | SG2 live tools (`demo.py`, `run_sg2.py --video`, `camera_check.py`) use MediaPipe face confidence **0.2** instead of 0.5. Recommend the same to SG1 | Synthetic niqab on TEST: lost-face frames on the glasses+niqab video 28% → 1.7%, blink recall 0.834 → 0.894. Normal faces unchanged (F1 0.947 → 0.948). False faces with nothing visible: +10/600 frames worst case | `results/occlusion/`, SG1 issue |
 | 2026-10-25 | **Primary = Config G** (adaptive EAR + CNN v2 check). **Backup = Config C** (adaptive EAR). G falls back to C automatically | TEST F1 0.947 [0.928–0.962] vs 0.918 [0.842–0.962]. False alarms 80 → 21. P(G > C) = 0.79 in the paired bootstrap | `results/midterm/`, `configs/primary.yaml`, `configs/backup.yaml` |
 | 2026-10-25 | CNN v2 is used **only as a confirmation step**, never alone | D2 alone: F1 0.699, 718 false alarms (over-calls "closed" on unseen people) | `results/midterm/comparison.csv` |
 | 2026-10-25 | Train CNN v2 with webcam eye crops from DEV videos talking / eb8_01 / eb8_02. Hold out eb8_03 for epoch and threshold choice | Week 5 CNN lost recall on webcam video (domain shift). TEST stays untouched | `experiments/train_cnn.py --with-dev-video` |
