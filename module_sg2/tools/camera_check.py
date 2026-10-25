@@ -38,6 +38,7 @@ def main():
     ap.add_argument("--height", type=int, default=480)
     ap.add_argument("--pipeline", action="store_true", help="also run SG1-compatible landmarks + SG2 on each frame")
     ap.add_argument("--config", default=str(MODULE_DIR / "configs" / "primary.yaml"))
+    ap.add_argument("--min-confidence", type=float, default=0.2, help="MediaPipe face confidence (see demo.py)")
     ap.add_argument("--out-dir")
     args = ap.parse_args()
 
@@ -68,7 +69,7 @@ def main():
         from sg1_landmarks import SG1LandmarkSource
         from sg2_eye import EyeStateModule
 
-        source = SG1LandmarkSource(MODULE_DIR / "models" / "face_landmarker.task")
+        source = SG1LandmarkSource(MODULE_DIR / "models" / "face_landmarker.task", min_confidence=args.min_confidence)
         module = EyeStateModule(args.config)
     reported_fps = cap.get(cv2.CAP_PROP_FPS)
     clock = FrameClock(kind, reported_fps)

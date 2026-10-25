@@ -133,7 +133,7 @@ def display_state(rec, max_blink_ms):
         return "BLINK", AMBER
     if rec["eye_state"] == "open":
         return "OPEN", GREEN
-    return "NO FACE", GREY
+    return "NO FACE", GREY  # SG1 found no face/eyes in this frame: SG2 cannot decide
 
 
 def draw_eyes(img, block, rec, xf, colour):
@@ -227,6 +227,10 @@ def main():
     ap.add_argument("--labels", help="ground-truth .tag file (default: <video>.tag if it exists)")
     ap.add_argument("--config", default=str(MODULE_DIR / "configs" / "primary.yaml"))
     ap.add_argument("--landmark-model", default=str(MODULE_DIR / "models" / "face_landmarker.task"))
+    ap.add_argument("--min-confidence", type=float, default=0.2,
+                    help="MediaPipe face detection/tracking confidence. 0.2 (default) keeps drivers who wear a niqab: "
+                         "with only the eyes visible, 0.5 lost 28%% of frames on the glasses+niqab test video, "
+                         "0.2 lost 1.7%% (results/occlusion/). SG1's own module currently uses 0.5")
     ap.add_argument("--width", type=int, default=640)
     ap.add_argument("--height", type=int, default=480)
     ap.add_argument("--out", help="write sg2-v1 records (JSONL)")
@@ -255,7 +259,7 @@ def main():
             sys.exit(f"[demo] could not open video source {args.source!r} "
                      f"(camera permission? wrong index? for Jetson CSI use --source csi)")
         clock = FrameClock(kind, cap.get(cv2.CAP_PROP_FPS))
-        source = SG1LandmarkSource(args.landmark_model,
+        source = SG1LandmarkSource(args.landmark_model, min_confidence=args.min_confidence,
                                    with_blendshapes=module.classifier.name in ("blendshape", "ear_adaptive_blendshape"))
         delay_ms = 1
         print(f"[demo] source={args.source} ({kind}), config={module.config_name}, "

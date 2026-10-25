@@ -55,6 +55,10 @@ def main():
     ap.add_argument("--out", default="-", help="output JSONL (default stdout)")
     ap.add_argument("--overlay", help="optional annotated output video (with --video)")
     ap.add_argument("--landmark-model", default=str(DEFAULT_LANDMARK_MODEL))
+    ap.add_argument("--min-confidence", type=float, default=0.2,
+                    help="MediaPipe face detection/tracking confidence. 0.2 (default) keeps drivers who wear a niqab: "
+                         "with only the eyes visible, 0.5 lost 28%% of frames on the glasses+niqab test video, "
+                         "0.2 lost 1.7%% (results/occlusion/). SG1's own module currently uses 0.5")
     args = ap.parse_args()
 
     module = EyeStateModule(args.config)
@@ -64,7 +68,7 @@ def main():
     if args.video:
         from sg1_landmarks import SG1LandmarkSource
 
-        source = SG1LandmarkSource(args.landmark_model,
+        source = SG1LandmarkSource(args.landmark_model, min_confidence=args.min_confidence,
                                    with_blendshapes=module.classifier.name in ("blendshape", "ear_adaptive_blendshape"))
         for fid, ts, frame in video_frames(args.video):
             block = source.process(frame, fid, ts)
