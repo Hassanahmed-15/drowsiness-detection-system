@@ -1,0 +1,13 @@
+# Config D2 (midterm) - CNN v2 (MRL + CEW + DEV webcam crops); threshold tuned on eb8_03 only
+name: D2_cnn_v2_p0.525
+classifier:
+  method: cnn
+  model_path: models/eye_state_cnn_v2.onnx
+  threshold: 0.525
+blink:
+  min_closed_frames: 1
+  max_blink_ms: 500
+  max_gap_frames: 2
+crop:
+  size: 32
+  scale: 1.6

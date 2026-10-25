@@ -65,7 +65,7 @@ def main():
         from sg1_landmarks import SG1LandmarkSource
 
         source = SG1LandmarkSource(args.landmark_model,
-                                   with_blendshapes=module.classifier.name == "blendshape")
+                                   with_blendshapes=module.classifier.name in ("blendshape", "ear_adaptive_blendshape"))
         for fid, ts, frame in video_frames(args.video):
             block = source.process(frame, fid, ts)
             t0 = time.perf_counter()
