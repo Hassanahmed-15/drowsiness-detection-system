@@ -35,7 +35,7 @@ python3 -c "import cv2; print(cv2.__version__, 'GStreamer' , 'YES' in [l for l i
 
 ```bash
 git clone https://github.com/Hassanahmed-15/drowsiness-detection-system.git
-cd drowsiness-detection-system && git checkout sg2/midterm      # or main once merged
+cd drowsiness-detection-system && git checkout module_sg2       # or main once merged
 # environment: see section 2
 cd module_sg2
 bash models/download_models.sh        # face landmarker + SG2 CNN models

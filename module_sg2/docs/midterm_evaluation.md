@@ -1,7 +1,7 @@
 # SG2 — Midterm Project Evaluation (Stage 1, Week 8): evidence and demo script
 
 **Subgroup:** SG2, Eye State & Blink Analysis · **Project:** Driver Drowsiness Monitoring · **Student:** Hassan Ahmed (@Hassanahmed-15)
-**Code:** branch `sg2/midterm` (PR into `module_sg2`) · **Board:** https://github.com/users/Hassanahmed-15/projects/2 · **Prepared:** 25 Oct 2026
+**Code:** branch `module_sg2` (merged from `sg2/w5-eye-state-experiments` and `sg2/midterm`) · **Board:** https://github.com/users/Hassanahmed-15/projects/2 · **Prepared:** 25 Oct 2026
 
 Every claim below links to a file in the repository that can be re-run. All numbers come from `results/midterm/` and `results/`.
 
@@ -22,7 +22,7 @@ Every claim below links to a file in the repository that can be re-run. All numb
 
 | Criterion (marks) | SG2's contribution | Evidence |
 |---|---|---|
-| Shared repo, module structure, meaningful commits (3) | `module_sg2/`, `interfaces/sg2/`, `datasets/sg2/`. Feature branches `sg2/w5-eye-state-experiments` → `sg2/midterm`. One commit per technical step | `git log --oneline origin/sg2/midterm` |
+| Shared repo, module structure, meaningful commits (3) | `module_sg2/`, `interfaces/sg2/`, `datasets/sg2/`. Feature branches `sg2/w5-eye-state-experiments` → `sg2/midterm`, merged into `module_sg2` by PR. One commit per technical step | `git log --oneline origin/module_sg2` |
 | Project board: owners, status, progress, blockers (3) | 30+ SG2 items with owner, status, week, sub-group, type, and a **Blocker** note on blocked items | [project #2](https://github.com/users/Hassanahmed-15/projects/2) |
 | Module README, deps, run instructions, evidence links (2) | Rewritten for the midterm | `module_sg2/README.md` |
 | Coordination: meeting record, decisions, interface/dependency tracking (2) | SG2 decision log; team interface/dependency tracker; meeting record template (**the team must fill in a real meeting**) | `docs/decision_log.md`, `documentation/coordination/` |

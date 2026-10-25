@@ -9,7 +9,7 @@ Status is taken **only from what is in this repository** on 25 Oct 2026. Anythin
 |---|---|---|---|---|---|
 | I1 | Camera → SG1 | BGR frame + `frame_id` + `timestamp_ms` | SG1 README (PR #1) | documented, PR not merged | — |
 | I2 | SG1 → SG2, SG3 | SG1 V1 face block: `face_valid`, `left_eye_pts`/`right_eye_pts` (6 ordered points), `mouth_pts`, ROI boxes, `head_pose`, full-frame pixels | SG1 README (PR #1) + `landmark_map.md` (PR #2) | documented, **PRs #1–#3 not merged** | SG1 to merge into `module_sg1` |
-| I3 | SG2 → SG4 | `sg2-v1` per-frame eye record (`eye_state`, EARs, `closed_duration_ms`, `blink_event`, counters) | `interfaces/sg2/README.md` + JSON schema + mocks | documented, tested, **waiting for SG4 confirmation** | #7 |
+| I3 | SG2 → SG4 | `sg2-v1` per-frame eye record (`eye_state`, EARs, `closed_duration_ms`, `blink_event`, counters) | `interfaces/sg2/README.md` + JSON schema + mocks (the team V1 spec has no SG2 section, so `sg2-v1` is SG2's V1 contract) | documented, tested, **waiting for SG4 confirmation** | #7 |
 | I4 | SG3 → SG4 | mouth / yawn packet (`mouth` block, `yawn_prob`, `cue_flags`) | SG3 `gate.py` refers to "interface spec V1, section 6" | partly in code (`module_sg3`). **The spec document is not in the repo** | SG3 to add their spec section to `interfaces/` |
 | I5 | SG4 → SG5 | temporal indicators. SG5's code expects `valid`, `window_valid_fraction`, `perclos`, `longest_closure_ms`, `current_closure_ms`, `yawn_count` | SG5 mock inputs (branch `alveenashahidd-patch-1-1`, PR #4) | SG5 assumes this. **SG4 has no code or README in the repo** | SG4 to confirm the fields |
 | I6 | SG5 → alert | `decision_valid`, `state`, `drowsiness_score`, `alarm_flag`, `alarm_type` | SG5 `decision_rules` (branch) | in code, not merged | — |
@@ -42,6 +42,6 @@ How SG2's output feeds SG5's expected inputs, through SG4:
 |---|---|---|
 | PR #1–#3 (SG1) | `main` | open since 7 Oct |
 | PR #4 (SG5) | `main` | open since 7 Oct |
-| PR #5 (SG2 Week 5) + `sg2/midterm` | `module_sg2` | open. Waiting for review |
+| PR #5 (SG2 Week 5) + `sg2/midterm` | `module_sg2` | merged 25 Oct. PR `module_sg2` → `main` open for team review |
 | `module_sg3` (gate.py) | — | on its branch, no PR |
 | `main` | — | contains only the initial structure (no module merged yet) |
