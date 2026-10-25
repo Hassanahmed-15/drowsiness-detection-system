@@ -1,0 +1,11 @@
+# Tested with Python 3.12 on macOS (Apple M4), 2026-10-07
+mediapipe==1.1.0
+opencv-python-headless==5.0.0
+numpy
+pyyaml
+onnxruntime
+# experiments / training only
+pandas
+scikit-learn
+matplotlib
+torch==2.14.1
