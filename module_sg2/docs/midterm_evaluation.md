@@ -23,7 +23,7 @@ Every claim below links to a file in the repository that can be re-run. All numb
 | Criterion (marks) | SG2's contribution | Evidence |
 |---|---|---|
 | Shared repo, module structure, meaningful commits (3) | `module_sg2/`, `interfaces/sg2/`, `datasets/sg2/`. Feature branches `sg2/w5-eye-state-experiments` → `sg2/midterm`, merged into `module_sg2` by PR. One commit per technical step | `git log --oneline origin/module_sg2` |
-| Project board: owners, status, progress, blockers (3) | 30+ SG2 items with owner, status, week, sub-group, type, and a **Blocker** note on blocked items | [project #2](https://github.com/users/Hassanahmed-15/projects/2) |
+| Project board: owners, status, progress, blockers (3) | Board in the Week 5 structure: Backlog → To Do → In Progress → Review/Blocked → Done. Titles `W# \| SG# \| task`. Every item has an owner and Week / Sub-group / Type labels (except #41, which waits for the group leader to name an SG6 owner). Blocker and Evidence fields. Views: Team board, SG2 board, Blockers, Week 8. Milestones W5/W6/W8 show % done. A status update lists each subgroup's blockers | [Team board](https://github.com/users/Hassanahmed-15/projects/2/views/2) · [Blockers](https://github.com/users/Hassanahmed-15/projects/2/views/4) · [milestones](https://github.com/Hassanahmed-15/drowsiness-detection-system/milestones) |
 | Module README, deps, run instructions, evidence links (2) | Rewritten for the midterm | `module_sg2/README.md` |
 | Coordination: meeting record, decisions, interface/dependency tracking (2) | SG2 decision log; team interface/dependency tracker; meeting record template (**the team must fill in a real meeting**) | `docs/decision_log.md`, `documentation/coordination/` |
 

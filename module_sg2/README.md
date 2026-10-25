@@ -1,6 +1,6 @@
 # Module — Sub-group 2: Eye State & Blink Analysis
 
-**Owner:** SG2: Hassan Ahmed ([@Hassanahmed-15](https://github.com/Hassanahmed-15)) · **Status (25 Oct 2026, midterm):** working prototype, primary + backup selected, V1 contract tested · **Board:** [project #2](https://github.com/users/Hassanahmed-15/projects/2) (filter `Sub-group: SG2`)
+**Owner:** SG2: Hassan Ahmed ([@Hassanahmed-15](https://github.com/Hassanahmed-15)) · **Status (25 Oct 2026, midterm):** working prototype, primary + backup selected, V1 contract tested · **Board:** [team board](https://github.com/users/Hassanahmed-15/projects/2/views/2) · [SG2 board](https://github.com/users/Hassanahmed-15/projects/2/views/3)
 
 ## Purpose and role in the system
 For every video frame, SG2 decides whether the driver's eyes are **open or closed**. It turns runs of closed frames into **blink** events (≤ 500 ms) and **long-closure** events (> 500 ms, a possible micro-sleep), and passes this per-frame eye evidence to SG4.
