@@ -11,6 +11,9 @@ Run from module_sg2/. Keys in the window: q = quit, space = pause, r = reset.
   # 3. no camera, no SG1: mock SG1 V1 stream with scripted ground truth
   python tools/demo.py --sg1-jsonl ../interfaces/sg2/mock/mock_sg1_drowsy.jsonl
 
+  # 4. no dataset download: 20 s of a REAL test video as SG1 blocks + hand labels
+  python tools/demo.py --sg1-jsonl ../interfaces/sg2/examples/eb8_09_real_sg1.jsonl
+
 Options: --config configs/backup.yaml (default configs/primary.yaml),
          --out records.jsonl (save sg2-v1 records), --print-json (show records in the terminal),
          --save demo.mp4 (record the window), --no-window (headless, e.g. over SSH)
@@ -43,6 +46,11 @@ PANEL_W, PLOT_H, VIEW_H, HISTORY = 360, 170, 480, 180
 def load_ground_truth(args):
     """Per-frame labels (1 closed / 0 open / -1 ignore) and blink intervals, if available."""
     if args.sg1_jsonl:
+        labels = Path(args.sg1_jsonl).with_suffix(".labels.json")  # real sample: per-frame hand labels
+        if labels.exists():
+            info = json.loads(labels.read_text())
+            return {"label": np.array(info["label"], np.int8), "blinks": [tuple(b) for b in info["blinks"]],
+                    "source": f"hand labels ({info['source'][:28]}...)"}
         truth = Path(args.sg1_jsonl).with_name("mock_ground_truth.json")
         if not truth.exists():
             return None
