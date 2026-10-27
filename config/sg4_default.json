@@ -1,0 +1,13 @@
+{
+  "window_ms": 30000,
+  "warmup_ms": 5000,
+  "min_valid_fraction": 0.6,
+  "max_gap_ms": 200,
+  "t_blink_min_ms": 50,
+  "t_blink_max_ms": 500,
+  "yawn_smooth_n": 3,
+  "yawn_on_threshold": 0.6,
+  "yawn_off_threshold": 0.4,
+  "yawn_min_ms": 1500,
+  "yawn_refractory_ms": 3000
+}
