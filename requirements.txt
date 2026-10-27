@@ -1,0 +1,3 @@
+# SG-4 core and command-line tools use only the Python standard library.
+# Pytest is needed to run the test suite.
+pytest>=7.0

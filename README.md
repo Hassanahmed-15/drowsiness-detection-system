@@ -38,7 +38,7 @@ Only `timestamp_ms` is used for time; the wall clock is never read.
 ## Run
 
 ```bash
-pip install pytest            # tests; numpy/matplotlib optional (plots)
+pip install -r requirements.txt
 python -m pytest -q tests
 
 python mock/generate.py --scenario mixed --duration 180 --fps 30 --seed 1 \
@@ -50,6 +50,10 @@ python sweep.py    --input in.jsonl --truth gt.csv --output results.csv \
     --param window_ms=10000,30000 --param t_blink_max_ms=400,500 \
     --param yawn_on_threshold=0.5,0.6,0.7
 ```
+
+The SG-4 runtime itself uses only the Python standard library. `matplotlib`
+is optional for `evaluate.py --plot`; `PyYAML` is optional for YAML configs.
+Install either only if needed (for example, `pip install matplotlib`).
 
 Scenarios: `normal`, `drowsy`, `yawning`, `face_lost`, `mixed`. Options: `--fps`,
 `--drop-prob` (missing frames), `--jitter-ms`, `--flicker-prob` (flips
