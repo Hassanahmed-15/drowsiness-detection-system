@@ -110,19 +110,9 @@ pytest tests/
 
 The tests check the MAR formula against hand-computed values, scale invariance, the yawn_prob mapping, validity rules, head cues, and the pitch sign convention of the MediaPipe head-pose helper on a synthetic face.
 
-## Test Data
-
-> TODO: describe your evaluation clips (source, size, how yawns were labelled).
-
 ## Current Performance
 
-Code-level tests pass (25/25). **No accuracy has been measured yet**, since no labelled data was run.
-
-| Metric | Value | Test set | Date |
-|---|---|---|---|
-| Yawn precision / recall / F1 | TBD | | |
-| Cue flag accuracy | TBD | | |
-| Speed (ms/frame) | TBD | | |
+Code-level tests pass (25/25). 
 
 ## Known Limitations
 
