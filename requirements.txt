@@ -1,0 +1,6 @@
+numpy>=1.23
+opencv-python>=4.8
+# Only needed for run_sg3.py with the built-in MediaPipe front end:
+mediapipe>=0.10
+# Tests:
+pytest>=7
