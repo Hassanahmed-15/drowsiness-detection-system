@@ -1,0 +1,24 @@
+# PRIMARY (midterm, 2026-10-25) = Config G: adaptive EAR (Config C) confirmed by CNN v2.
+# Evidence: results/midterm/comparison.csv - TEST closed-frame F1 0.947 (95% CI 0.928-0.962),
+# blink F1 0.951, false alarms 80 -> 21 vs Config C. V1 inputs only (eye points + frame).
+# If the CNN model or onnxruntime is missing, it automatically behaves as the backup (Config C).
+name: PRIMARY_G_ear_adaptive_cnn_check_p0.525
+classifier:
+  method: ear_adaptive_cnn_check
+  model_path: models/eye_state_cnn_v2.onnx
+  cnn_threshold: 0.525
+  k: 0.425
+  window_frames: 900
+  percentile: 80
+  warmup_frames: 30
+  fallback_threshold: 0.13
+  min_threshold: 0.1
+  max_threshold: 0.35
+  fusion: mean
+blink:
+  min_closed_frames: 1
+  max_blink_ms: 500
+  max_gap_frames: 2
+crop:
+  size: 32
+  scale: 1.6

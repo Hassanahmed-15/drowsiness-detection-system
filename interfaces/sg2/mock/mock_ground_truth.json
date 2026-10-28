@@ -1,0 +1,337 @@
+{
+  "alert": {
+    "fps": 30.0,
+    "frames": 1800,
+    "description": {
+      "open_ear": 0.3,
+      "gap": [
+        2.5,
+        5.0
+      ],
+      "blink_ms": [
+        120,
+        300
+      ],
+      "long": [],
+      "lost": []
+    },
+    "scripted_events": [
+      {
+        "type": "blink",
+        "start_ms": 3700.0,
+        "duration_ms": 276
+      },
+      {
+        "type": "blink",
+        "start_ms": 6833.3,
+        "duration_ms": 156
+      },
+      {
+        "type": "blink",
+        "start_ms": 11766.7,
+        "duration_ms": 126
+      },
+      {
+        "type": "blink",
+        "start_ms": 15933.3,
+        "duration_ms": 257
+      },
+      {
+        "type": "blink",
+        "start_ms": 20500.0,
+        "duration_ms": 259
+      },
+      {
+        "type": "blink",
+        "start_ms": 23300.0,
+        "duration_ms": 245
+      },
+      {
+        "type": "blink",
+        "start_ms": 28066.7,
+        "duration_ms": 199
+      },
+      {
+        "type": "blink",
+        "start_ms": 31700.0,
+        "duration_ms": 135
+      },
+      {
+        "type": "blink",
+        "start_ms": 34466.7,
+        "duration_ms": 246
+      },
+      {
+        "type": "blink",
+        "start_ms": 38000.0,
+        "duration_ms": 194
+      },
+      {
+        "type": "blink",
+        "start_ms": 41866.7,
+        "duration_ms": 264
+      },
+      {
+        "type": "blink",
+        "start_ms": 44733.3,
+        "duration_ms": 147
+      },
+      {
+        "type": "blink",
+        "start_ms": 48300.0,
+        "duration_ms": 225
+      },
+      {
+        "type": "blink",
+        "start_ms": 50900.0,
+        "duration_ms": 174
+      },
+      {
+        "type": "blink",
+        "start_ms": 54133.3,
+        "duration_ms": 145
+      },
+      {
+        "type": "blink",
+        "start_ms": 56900.0,
+        "duration_ms": 274
+      }
+    ],
+    "sg2_detected_blinks": 16,
+    "sg2_detected_long_closures": 0
+  },
+  "drowsy": {
+    "fps": 30.0,
+    "frames": 1800,
+    "description": {
+      "open_ear": 0.24,
+      "gap": [
+        1.5,
+        3.5
+      ],
+      "blink_ms": [
+        300,
+        480
+      ],
+      "long": [
+        [
+          14.0,
+          1200
+        ],
+        [
+          31.0,
+          2000
+        ],
+        [
+          47.0,
+          2800
+        ]
+      ],
+      "lost": []
+    },
+    "scripted_events": [
+      {
+        "type": "blink",
+        "start_ms": 2533.3,
+        "duration_ms": 368
+      },
+      {
+        "type": "blink",
+        "start_ms": 5133.3,
+        "duration_ms": 452
+      },
+      {
+        "type": "blink",
+        "start_ms": 6933.3,
+        "duration_ms": 379
+      },
+      {
+        "type": "blink",
+        "start_ms": 9900.0,
+        "duration_ms": 436
+      },
+      {
+        "type": "long_closure",
+        "start_ms": 14000.0,
+        "duration_ms": 1200
+      },
+      {
+        "type": "blink",
+        "start_ms": 19433.3,
+        "duration_ms": 419
+      },
+      {
+        "type": "blink",
+        "start_ms": 22633.3,
+        "duration_ms": 312
+      },
+      {
+        "type": "blink",
+        "start_ms": 24300.0,
+        "duration_ms": 381
+      },
+      {
+        "type": "blink",
+        "start_ms": 25833.3,
+        "duration_ms": 338
+      },
+      {
+        "type": "long_closure",
+        "start_ms": 31000.0,
+        "duration_ms": 2000
+      },
+      {
+        "type": "blink",
+        "start_ms": 37866.7,
+        "duration_ms": 445
+      },
+      {
+        "type": "blink",
+        "start_ms": 40633.3,
+        "duration_ms": 317
+      },
+      {
+        "type": "blink",
+        "start_ms": 42733.3,
+        "duration_ms": 386
+      },
+      {
+        "type": "long_closure",
+        "start_ms": 47000.0,
+        "duration_ms": 2800
+      },
+      {
+        "type": "blink",
+        "start_ms": 52633.3,
+        "duration_ms": 345
+      },
+      {
+        "type": "blink",
+        "start_ms": 55666.7,
+        "duration_ms": 367
+      },
+      {
+        "type": "blink",
+        "start_ms": 57866.7,
+        "duration_ms": 322
+      }
+    ],
+    "sg2_detected_blinks": 14,
+    "sg2_detected_long_closures": 3
+  },
+  "face_lost": {
+    "fps": 30.0,
+    "frames": 1800,
+    "description": {
+      "open_ear": 0.29,
+      "gap": [
+        2.5,
+        5.0
+      ],
+      "blink_ms": [
+        120,
+        300
+      ],
+      "long": [],
+      "lost": [
+        [
+          20.0,
+          1000
+        ],
+        [
+          40.0,
+          400
+        ]
+      ]
+    },
+    "scripted_events": [
+      {
+        "type": "blink",
+        "start_ms": 3633.3,
+        "duration_ms": 143
+      },
+      {
+        "type": "blink",
+        "start_ms": 7566.7,
+        "duration_ms": 249
+      },
+      {
+        "type": "blink",
+        "start_ms": 12366.7,
+        "duration_ms": 261
+      },
+      {
+        "type": "blink",
+        "start_ms": 17233.3,
+        "duration_ms": 255
+      },
+      {
+        "type": "face_lost",
+        "start_ms": 20000.0,
+        "duration_ms": 1000
+      },
+      {
+        "type": "blink",
+        "start_ms": 21100.0,
+        "duration_ms": 239
+      },
+      {
+        "type": "blink",
+        "start_ms": 23833.3,
+        "duration_ms": 191
+      },
+      {
+        "type": "blink",
+        "start_ms": 27800.0,
+        "duration_ms": 256
+      },
+      {
+        "type": "blink",
+        "start_ms": 32100.0,
+        "duration_ms": 129
+      },
+      {
+        "type": "blink",
+        "start_ms": 36233.3,
+        "duration_ms": 156
+      },
+      {
+        "type": "face_lost",
+        "start_ms": 40000.0,
+        "duration_ms": 400
+      },
+      {
+        "type": "blink",
+        "start_ms": 40100.0,
+        "duration_ms": 156
+      },
+      {
+        "type": "blink",
+        "start_ms": 44066.7,
+        "duration_ms": 228
+      },
+      {
+        "type": "blink",
+        "start_ms": 46966.7,
+        "duration_ms": 258
+      },
+      {
+        "type": "blink",
+        "start_ms": 50466.7,
+        "duration_ms": 213
+      },
+      {
+        "type": "blink",
+        "start_ms": 53633.3,
+        "duration_ms": 244
+      },
+      {
+        "type": "blink",
+        "start_ms": 57066.7,
+        "duration_ms": 267
+      }
+    ],
+    "sg2_detected_blinks": 14,
+    "sg2_detected_long_closures": 0
+  }
+}

@@ -1,0 +1,49 @@
+config,condition,closed_frames,f1,FP,FN
+A,glasses (eb8_11),144,0.2233,1002,0
+A,no glasses,708,0.4123,2018,0
+A,head pitch within 5 deg of driver's normal,625,0.4048,1838,0
+A,head pitch 5-10 deg from normal,163,0.2988,765,0
+A,head pitch >= 10 deg from normal,64,0.2349,417,0
+A,low light (synthetic),852,0.3498,3158,2
+B,glasses (eb8_11),144,0.6906,129,0
+B,no glasses,708,0.8712,164,35
+B,head pitch within 5 deg of driver's normal,625,0.88,131,31
+B,head pitch 5-10 deg from normal,163,0.9222,24,3
+B,head pitch >= 10 deg from normal,64,0.4755,138,1
+B,low light (synthetic),852,0.9206,52,81
+C,glasses (eb8_11),144,0.9662,9,1
+C,no glasses,708,0.9074,71,61
+C,head pitch within 5 deg of driver's normal,625,0.946,9,56
+C,head pitch 5-10 deg from normal,163,0.9845,1,4
+C,head pitch >= 10 deg from normal,64,0.6327,70,2
+C,low light (synthetic),852,0.8912,9,160
+D,glasses (eb8_11),144,0.8981,2,25
+D,no glasses,708,0.8668,15,155
+D,head pitch within 5 deg of driver's normal,625,0.8737,17,127
+D,head pitch 5-10 deg from normal,163,0.8561,0,41
+D,head pitch >= 10 deg from normal,64,0.8966,0,12
+D,low light (synthetic),852,0.8402,37,208
+D2,glasses (eb8_11),144,0.3445,548,0
+D2,no glasses,708,0.8872,170,8
+D2,head pitch within 5 deg of driver's normal,625,0.6578,634,8
+D2,head pitch 5-10 deg from normal,163,0.8534,56,0
+D2,head pitch >= 10 deg from normal,64,0.8205,28,0
+D2,low light (synthetic),852,0.6263,995,10
+E,glasses (eb8_11),144,0.9022,30,1
+E,no glasses,708,0.9548,32,32
+E,head pitch within 5 deg of driver's normal,625,0.9557,23,32
+E,head pitch 5-10 deg from normal,163,0.9848,4,1
+E,head pitch >= 10 deg from normal,64,0.7853,35,0
+E,low light (synthetic),852,0.8948,109,74
+F,glasses (eb8_11),144,0.9377,18,1
+F,no glasses,708,0.9316,50,47
+F,head pitch within 5 deg of driver's normal,625,0.9514,12,47
+F,head pitch 5-10 deg from normal,163,0.9908,2,1
+F,head pitch >= 10 deg from normal,64,0.7033,54,0
+F,low light (synthetic),852,0.9272,10,107
+G,glasses (eb8_11),144,0.9695,8,1
+G,no glasses,708,0.942,13,66
+G,head pitch within 5 deg of driver's normal,625,0.9424,8,61
+G,head pitch 5-10 deg from normal,163,0.9845,1,4
+G,head pitch >= 10 deg from normal,64,0.8986,12,2
+G,low light (synthetic),852,0.889,9,163
