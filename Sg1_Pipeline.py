@@ -27,7 +27,6 @@ import subprocess
 import sys
 import time
 import urllib.request
-
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -74,11 +73,7 @@ NULLABLE_WHEN_NOT_VALID = [
     "left_eye_pts", "right_eye_pts", "mouth_pts",
     "left_eye_roi_box", "right_eye_roi_box", "mouth_roi_box", "head_pose",
 ]
-
-
-# ----------------------------------------------------------------------------
 # Setup helpers
-# ----------------------------------------------------------------------------
 def ensure_model(model_path=MODEL_PATH):
     """Download the Face Landmarker model if it is not already on disk."""
     if os.path.exists(model_path):
@@ -87,8 +82,6 @@ def ensure_model(model_path=MODEL_PATH):
     print(f"Downloading model to {model_path} ...")
     urllib.request.urlretrieve(MODEL_URL, model_path)
     print("Model downloaded")
-
-
 def load_face_conf_min(config_path):
     """Read face_conf_min from config/shared.yaml (spec section 2), if given."""
     if not config_path:
@@ -104,12 +97,10 @@ def load_face_conf_min(config_path):
               f"{DEFAULT_FACE_CONF_MIN}")
         return DEFAULT_FACE_CONF_MIN
     return float(cfg["face_conf_min"])
-
-
+ 
 def create_detector(running_mode, face_conf_min=DEFAULT_FACE_CONF_MIN,
                     max_faces=3, tracking_confidence=0.5):
     """Create a Face Landmarker.
-
     face_conf_min is applied as the detection and presence confidence, which is
     how this module implements "face found with confidence >= face_conf_min".
     max_faces > 1 lets us pick the driver face ourselves (spec D-13).
@@ -124,12 +115,9 @@ def create_detector(running_mode, face_conf_min=DEFAULT_FACE_CONF_MIN,
     )
     return vision.FaceLandmarker.create_from_options(options)
 
-
 def to_mp_image(frame_bgr):
     rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
     return mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
-
-
 def frame_timestamp_ms(frame_id, fps):
     """Timestamp for an offline video file.
 
@@ -138,19 +126,11 @@ def frame_timestamp_ms(frame_id, fps):
     timestamp is derived from frame_id and the container FPS.
     """
     return int(round(frame_id / fps * 1000))
-
-
-# ----------------------------------------------------------------------------
 # Geometry helpers
-# ----------------------------------------------------------------------------
 def lm_to_pixel(lm, w, h):
     return [int(lm.x * w), int(lm.y * h)]
-
-
 def get_points(landmarks, indices, w, h):
     return [lm_to_pixel(landmarks[i], w, h) for i in indices]
-
-
 def box_dict(x1, y1, x2, y2):
     """Spec box format: {x, y, width, height}, (x, y) = top-left corner."""
     return {"x": int(x1), "y": int(y1),
@@ -174,24 +154,19 @@ def get_face_box(landmarks, w, h):
     return box_dict(max(0, min(xs)), max(0, min(ys)),
                     min(w, max(xs)), min(h, max(ys)))
 
-
 def crop_box(frame, box):
     """Native-resolution crop of a box (spec D-16). Returns a uint8 BGR array."""
     x, y, bw, bh = box["x"], box["y"], box["width"], box["height"]
     return frame[y:y + bh, x:x + bw].copy()
 
-
 def points_inside_frame(points, w, h):
     return all(0 <= x < w and 0 <= y < h for x, y in points)
 
-
 def box_is_plausible(box, min_size):
     return box["width"] >= min_size and box["height"] >= min_size
-
-
-# ----------------------------------------------------------------------------
+ 
 # Driver face selection (spec D-13)
-# ----------------------------------------------------------------------------
+ 
 def select_driver_face(result, w, h, region):
     """Pick the largest face whose box centre lies inside the driver region.
 
@@ -211,11 +186,7 @@ def select_driver_face(result, w, h, region):
         if area > best_area:
             best_idx, best_area = i, area
     return best_idx
-
-
-# ----------------------------------------------------------------------------
-# Head pose (spec D-01: SG-1 computes it from landmarks with solvePnP)
-# ----------------------------------------------------------------------------
+# Head pose (spec D-01: SG-1 computes it from landmarks with solvePnP)-
 def _wrap_angle(angle):
     """Remove the common +/-180 degree Euler ambiguity."""
     if angle > 90:
@@ -223,7 +194,6 @@ def _wrap_angle(angle):
     if angle < -90:
         return -180 - angle
     return angle
-
 
 def estimate_head_pose(landmarks, w, h):
     """Approximate head pose (degrees) from six landmarks via solvePnP.
@@ -275,17 +245,13 @@ def estimate_head_pose(landmarks, w, h):
         "roll_deg": round(_wrap_angle(float(angles[2])), 2),
     }
 
-
-# ----------------------------------------------------------------------------
 # SG-1 face block (spec section 4)
-# ----------------------------------------------------------------------------
 def _null_face_block(face_detected=False, face_box=None):
     block = {k: None for k in FACE_BLOCK_KEYS}
     block["face_detected"] = face_detected
     block["face_valid"] = False
     block["face_box"] = face_box
     return block
-
 
 def build_face_block(result, frame, region=(0.0, 0.0, 1.0, 1.0),
                      include_landmarks=False):
@@ -329,9 +295,7 @@ def build_face_block(result, frame, region=(0.0, 0.0, 1.0, 1.0),
         and box_is_plausible(left_eye_roi_box, MIN_ROI_SIZE_PX)
         and box_is_plausible(right_eye_roi_box, MIN_ROI_SIZE_PX)
         and box_is_plausible(mouth_roi_box, MIN_ROI_SIZE_PX)
-        and head_pose is not None
-    )
-
+        and head_pose is not None )
     # Rule: face_valid false -> points, ROI boxes and head_pose are null.
     if not face_valid:
         block = _null_face_block(face_detected=True, face_box=face_box)
@@ -363,7 +327,6 @@ def build_face_block(result, frame, region=(0.0, 0.0, 1.0, 1.0),
     }
     return block, rois
 
-
 def build_sg1_packet(result, frame, frame_id, timestamp_ms,
                      region=(0.0, 0.0, 1.0, 1.0), include_landmarks=False):
     """Build the SG-1 output for one frame.
@@ -380,8 +343,6 @@ def build_sg1_packet(result, frame, frame_id, timestamp_ms,
         "face": face_block,
     }
     return record, rois
-
-
 def check_face_block(face):
     """Check the SG-1 rules from spec section 4. Returns a list of problems."""
     problems = []
@@ -390,7 +351,6 @@ def check_face_block(face):
             problems.append(f"missing key: {k}")
     if problems:
         return problems
-
     for k in ("face_detected", "face_valid"):
         if not isinstance(face[k], bool):
             problems.append(f"{k} is not a bool")
@@ -422,11 +382,7 @@ def check_face_block(face):
             if face[k] is None:
                 problems.append(f"{k} is null while face_valid is true")
     return problems
-
-
-# ----------------------------------------------------------------------------
 # Drawing (debug overlay, not part of the interface)
-# ----------------------------------------------------------------------------
 def draw_sg1_output(frame, record):
     face = record["face"]
     vis = frame.copy()
@@ -478,17 +434,12 @@ def draw_sg1_output(frame, record):
     cv2.putText(vis, f"face_valid: {face['face_valid']}", (30, 185),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.65, (200, 255, 200), 2)
     return vis
-
-
-# ----------------------------------------------------------------------------
 # Pipeline steps
-# ----------------------------------------------------------------------------
 def read_first_frame(video_path):
     cap = cv2.VideoCapture(video_path)
     success, frame = cap.read()
     cap.release()
     return frame if success else None
-
 
 def check_first_frame(video_path, out_dir, face_conf_min, max_faces, region,
                       include_landmarks):
@@ -523,7 +474,6 @@ def check_first_frame(video_path, out_dir, face_conf_min, max_faces, region,
     cv2.imwrite(img_path, draw_sg1_output(frame, record))
     print(f"Saved: {img_path}")
 
-
 def process_video(video_path, out_dir, face_conf_min, max_faces, region,
                   include_landmarks, write_video):
     """One pass over the video: write JSONL records and the annotated video."""
@@ -542,7 +492,6 @@ def process_video(video_path, out_dir, face_conf_min, max_faces, region,
     if write_video:
         writer = cv2.VideoWriter(video_out, cv2.VideoWriter_fourcc(*"mp4v"),
                                  fps, (width, height))
-
     frame_id = 0
     violations = 0
     with open(jsonl_path, "w", encoding="utf-8") as jf:
@@ -550,7 +499,6 @@ def process_video(video_path, out_dir, face_conf_min, max_faces, region,
             success, frame = cap.read()
             if not success:
                 break
-
             ts = frame_timestamp_ms(frame_id, fps)
             result = detector.detect_for_video(to_mp_image(frame), ts)
             record, _rois = build_sg1_packet(
@@ -631,7 +579,6 @@ def run_configuration(video_path, config_name, face_conf_min, max_faces, region)
         "failure_frame_ids": failures[:20],
     }
 
-
 def compare_configurations(video_path, out_csv, max_faces, region):
     df = pd.DataFrame([
         run_configuration(video_path, "Config A", 0.50, max_faces, region),
@@ -656,11 +603,7 @@ def reencode_h264(in_path, out_path):
                     "-pix_fmt", "yuv420p", out_path], check=True)
     print(f"Saved H.264 video as: {out_path}")
     return True
-
-
-# ----------------------------------------------------------------------------
 # CLI
-# ----------------------------------------------------------------------------
 def parse_region(text):
     try:
         vals = tuple(float(v) for v in text.split(","))
@@ -670,7 +613,6 @@ def parse_region(text):
         raise argparse.ArgumentTypeError(
             "driver region must be 'x1,y1,x2,y2' as fractions of the frame, "
             "e.g. 0.0,0.0,0.6,1.0")
-
 
 def parse_args():
     p = argparse.ArgumentParser(
@@ -694,7 +636,6 @@ def parse_args():
     p.add_argument("--no-h264", action="store_true",
                    help="Skip the ffmpeg H.264 re-encode")
     return p.parse_args()
-
 
 def main():
     args = parse_args()
@@ -729,7 +670,5 @@ def main():
                       os.path.join(args.out_dir, "sg1_annotated_video_h264.mp4"))
 
     print("\nDone.")
-
-
 if __name__ == "__main__":
     main()
