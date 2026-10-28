@@ -60,7 +60,13 @@ def main() -> int:
             break
         ts_ms = int(round(frame_id * 1000.0 / fps))
         up = upstream(frame)
-        out = sg3.process(frame_id, ts_ms, up.face_valid, up.head_pose, up.mouth_pts)
+        out = sg3.process(
+            frame_id=frame_id,
+            timestamp_ms=ts_ms,
+            face_valid=up.face_valid,
+            head_pose=up.head_pose,
+            mouth_pts=up.mouth_pts,
+        )
         results.append(out.to_dict())
 
         if args.show:

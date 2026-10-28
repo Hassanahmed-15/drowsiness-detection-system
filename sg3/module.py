@@ -34,7 +34,7 @@ class SG3:
         frame_id: int,
         timestamp_ms: int,
         face_valid: bool,
-        #mouth_roi: Optional[np.ndarray] = None,   # unused by MAR; kept for the interface
+        mouth_roi: Optional[np.ndarray] = None,   # unused by MAR; kept for the interface
         head_pose: Optional[HeadPose] = None,
         mouth_pts=None,
     ) -> MouthOutput:
