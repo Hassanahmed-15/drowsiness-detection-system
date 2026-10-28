@@ -1,6 +1,14 @@
 # SG1 Face / Eye / Mouth Landmark Pipeline
 
-Python script version of `week5_CV_project_SG_1.ipynb` (originally written for Google Colab).
+## Configurations
+
+The pipeline compares two face-confidence configurations. This threshold is used for
+MediaPipe's face detection and face presence checks:
+
+| Configuration | `face_conf_min` | Description |
+|---------------|-----------------|-------------|
+| Config A | `0.50` | Less strict threshold, allowing detections with lower confidence. |
+| Config B | `0.70` | Stricter threshold, requiring higher-confidence detections. |
 
 It uses MediaPipe's Face Landmarker to process a driver video and produce, per frame:
 face box, 6-point left/right eye landmarks, mouth points, ROI boxes for both eyes and the
@@ -90,15 +98,6 @@ The H.264 re-encode step needs `ffmpeg` on your PATH (it is a system program, no
 package). If it is missing, the script skips that step and still produces the `mp4v` video.
 Install it with `winget install ffmpeg` (Windows), `brew install ffmpeg` (macOS) or
 `sudo apt install ffmpeg` (Ubuntu/Debian).
-
-## Changes from the notebook
-
-- Colab-only parts removed (`!pip`, `!wget`, `google.colab.drive`, `IPython.display`).
-- The video path is now a command line argument instead of a Google Drive path.
-- The two `estimate_head_pose` definitions were merged; the script keeps the fixed
-  version (with the +/-180 degree angle correction).
-- `matplotlib` previews were replaced by saved image/video files, so it works without a display.
-- The Config A / B comparison table is also saved as a CSV.
 
 ## Notes
 

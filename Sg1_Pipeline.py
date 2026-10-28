@@ -9,8 +9,6 @@ follows the spec:
   * Serialized record (JSON, one per frame):
         {"interface_version": "1.0", "frame_id": int, "timestamp_ms": int,
          "face": { ...SG-1 block, spec section 4... }}
-    SG-1 only produces the `face` block. The `eyes`, `mouth`, `temporal` and
-    `decision` blocks belong to SG-2 to SG-5 and are NOT emitted here.
   * In-memory packet: the record plus the three ROI images
     (left_eye_roi, right_eye_roi, mouth_roi) as uint8 BGR arrays.
   * Boxes are {x, y, width, height} in full-frame pixels (top-left origin).
