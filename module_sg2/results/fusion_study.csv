@@ -1,0 +1,3 @@
+fusion,threshold,all TEST,|yaw| >= 20 deg
+mean,0.13,0.8328,0.9706
+width_weighted,0.13,0.8325,0.9855

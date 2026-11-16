@@ -1,0 +1,12 @@
+# Config A - Week 4 baseline (reference implementation)
+# Geometric Eye Aspect Ratio with the literature default threshold
+# (Soukupova & Cech 2016 use ~0.2). Both eyes averaged.
+name: A_baseline_ear_fixed_0.20
+classifier:
+  method: ear_fixed
+  threshold: 0.20
+  fusion: mean
+blink:
+  min_closed_frames: 1     # a closure needs >= 1 closed frame
+  max_blink_ms: 500        # longer closures are reported as long_closure
+  max_gap_frames: 2        # face lost for <= 2 frames does not end a closure

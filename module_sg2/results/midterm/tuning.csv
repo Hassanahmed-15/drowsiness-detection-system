@@ -1,0 +1,4 @@
+config,tuned_on,param,value,dev_f1
+D2,eb8_03,cnn_threshold,0.525,0.8896
+G,eb8_03,cnn_threshold,0.525,0.8477
+F,DEV (all 4),weight / fused_threshold,0.5 / 0.5,0.9062

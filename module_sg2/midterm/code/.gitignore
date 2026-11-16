@@ -1,0 +1,7 @@
+# models are downloaded with models/download_models.sh (not committed)
+models/*
+!models/README.md
+!models/download_models.sh
+__pycache__/
+*.mp4
+records*.jsonl

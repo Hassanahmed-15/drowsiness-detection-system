@@ -1,0 +1,33 @@
+config,test_set,metric,ci95_low,ci95_high
+A,TEST,f1,0.2841,0.4659
+A,TEST low-light,f1,0.2796,0.4494
+A,TEST,blink_f1,0.8109,0.8985
+A,TEST low-light,blink_f1,0.7421,0.8433
+B,TEST,f1,0.7116,0.949
+B,TEST low-light,f1,0.8882,0.9471
+B,TEST,blink_f1,0.9019,0.9619
+B,TEST low-light,blink_f1,0.9104,0.9607
+C,TEST,f1,0.8416,0.9617
+C,TEST low-light,f1,0.8643,0.9116
+C,TEST,blink_f1,0.9121,0.969
+C,TEST low-light,blink_f1,0.8756,0.9386
+D,TEST,f1,0.8412,0.8974
+D,TEST low-light,f1,0.8052,0.8708
+D,TEST,blink_f1,0.8605,0.9349
+D,TEST low-light,blink_f1,0.8551,0.9275
+D2,TEST,f1,0.5731,0.8345
+D2,TEST low-light,f1,0.5039,0.7674
+D2,TEST,blink_f1,0.7156,0.8658
+D2,TEST low-light,blink_f1,0.6199,0.79
+E,TEST,f1,0.9095,0.9723
+E,TEST low-light,f1,0.8286,0.9465
+E,TEST,blink_f1,0.9145,0.9686
+E,TEST low-light,blink_f1,0.9048,0.9618
+F,TEST,f1,0.8778,0.9671
+F,TEST low-light,f1,0.9056,0.9438
+F,TEST,blink_f1,0.9235,0.9709
+F,TEST low-light,blink_f1,0.914,0.9625
+G,TEST,f1,0.9283,0.9617
+G,TEST low-light,f1,0.8615,0.9101
+G,TEST,blink_f1,0.9248,0.9726
+G,TEST low-light,blink_f1,0.8756,0.9386
