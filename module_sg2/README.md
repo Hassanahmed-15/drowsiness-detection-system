@@ -195,10 +195,24 @@ module_sg2/
 ├── experiments/   data preparation, CNN training, evaluation scripts
 ├── results/       tables and charts from the experiments
 ├── models/        download_models.sh (the models themselves are not in git)
-└── docs/          reports, decision log, Jetson guide, viva prep
+├── docs/          reports, decision log, Jetson guide, viva prep
+└── midterm/       post-midterm submission: README_mid_evaluation.md, code/, latency.md, demo_video.mp4
 ```
 
+## AI-generated and open-source code
+
+| What | Tool / source | Where it is used |
+|---|---|---|
+| **AI assistant** | **Claude Code** (Anthropic, Claude models) | Helped write and refactor the Python code (`sg2_eye/`, `tools/`, `experiments/`), the tests, the latency benchmark and the documentation. Hassan Ahmed reviewed, ran and tested all of it. Every number in this README comes from scripts in this folder, run on the datasets below. |
+| Face landmarks | Google **MediaPipe Face Landmarker**, Apache-2.0: [library](https://github.com/google-ai-edge/mediapipe), [model](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker) | `tools/sg1_landmarks.py`, only when SG2 runs on a camera or video without SG1 (the same model SG1 uses) |
+| EAR formula | Soukupová & Čech, *Real-Time Eye Blink Detection using Facial Landmarks*, CVWW 2016 (paper, not code) | `sg2_eye/geometry.py` |
+| Libraries (pip) | OpenCV (Apache-2.0), ONNX Runtime (MIT), NumPy (BSD), PyYAML (MIT), PyTorch (BSD), scikit-learn (BSD), pandas (BSD), matplotlib | runtime, CNN training, evaluation |
+| Datasets | Eyeblink8, Talking Face, MRL Eye, CEW (research use; citations in [`datasets/sg2/README.md`](../datasets/sg2/README.md)) | testing, tuning, CNN training |
+
+No code was copied from other GitHub projects. The projects in [`docs/reference_screening/`](docs/reference_screening/) were read for comparison only.
+
 ## More documents
+- [`midterm/`](midterm/): post-midterm submission (evaluation README, frozen code, latency, demo video)
 - [`docs/midterm_evaluation.md`](docs/midterm_evaluation.md): midterm rubric, evidence and demo script
 - [`docs/decision_log.md`](docs/decision_log.md): what we decided and why
 - [`docs/week5_report.md`](docs/week5_report.md): the Week 5 experiment

@@ -1,0 +1,59 @@
+{
+  "source": "27122013_151644_cam.avi (640x480)",
+  "frames": 10663,
+  "face_found_pct": 100.0,
+  "machine": "arm64 / macOS-15.7.7-arm64-arm-64bit",
+  "python": "3.12.13",
+  "opencv": "5.0.0",
+  "primary_cnn_loaded": true,
+  "stages": {
+    "decode": {
+      "frames": 10633,
+      "mean_ms": 0.137,
+      "median_ms": 0.131,
+      "p95_ms": 0.183,
+      "max_ms": 1.777,
+      "fps_equivalent": 7278.2
+    },
+    "landmarks": {
+      "frames": 10633,
+      "mean_ms": 4.029,
+      "median_ms": 4.026,
+      "p95_ms": 4.179,
+      "max_ms": 8.909,
+      "fps_equivalent": 248.2
+    },
+    "sg2_primary": {
+      "frames": 10633,
+      "mean_ms": 0.15,
+      "median_ms": 0.133,
+      "p95_ms": 0.195,
+      "max_ms": 1.654,
+      "fps_equivalent": 6679.0
+    },
+    "sg2_backup": {
+      "frames": 10633,
+      "mean_ms": 0.046,
+      "median_ms": 0.046,
+      "p95_ms": 0.052,
+      "max_ms": 0.186,
+      "fps_equivalent": 21760.5
+    },
+    "end_to_end_primary": {
+      "frames": 10633,
+      "mean_ms": 4.316,
+      "median_ms": 4.305,
+      "p95_ms": 4.512,
+      "max_ms": 10.954,
+      "fps_equivalent": 231.7
+    },
+    "end_to_end_backup": {
+      "frames": 10633,
+      "mean_ms": 4.212,
+      "median_ms": 4.206,
+      "p95_ms": 4.381,
+      "max_ms": 10.743,
+      "fps_equivalent": 237.4
+    }
+  }
+}

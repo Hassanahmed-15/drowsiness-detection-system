@@ -1,0 +1,27 @@
+{
+  "source": "eb8_09_real_sg1.jsonl (SG1 blocks, no frames: the CNN check is skipped)",
+  "frames": 600,
+  "face_found_pct": 100.0,
+  "machine": "arm64 / macOS-15.7.7-arm64-arm-64bit",
+  "python": "3.12.13",
+  "opencv": "5.0.0",
+  "primary_cnn_loaded": true,
+  "stages": {
+    "sg2_primary": {
+      "frames": 570,
+      "mean_ms": 0.039,
+      "median_ms": 0.033,
+      "p95_ms": 0.037,
+      "max_ms": 3.175,
+      "fps_equivalent": 25540.5
+    },
+    "sg2_backup": {
+      "frames": 570,
+      "mean_ms": 0.033,
+      "median_ms": 0.032,
+      "p95_ms": 0.036,
+      "max_ms": 0.06,
+      "fps_equivalent": 30632.2
+    }
+  }
+}
