@@ -135,7 +135,7 @@ def main():
     sg1.ensure_model()
 
     here = os.path.dirname(os.path.abspath(__file__))
-    out_path = args.out or os.path.join(os.path.dirname(here), "latency.md")
+    out_path = args.out or os.path.join(here, "latency.md")
 
     rows = []
     video_info = None
