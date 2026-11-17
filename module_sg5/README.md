@@ -4,6 +4,19 @@ SG-5 is the decision stage of the driver drowsiness detection pipeline. It takes
 
 The notebook `CV_Project_SG5.ipynb` builds and tests SG-5 on its own, using mock SG-4 inputs, before it is integrated with SG-4 and deployed on the Jetson.
 
+**Group:** D1 · **Subgroup:** SG-5 · **Owners:** Alveena Shahid, Abdullah Umar
+
+## Selected algorithms
+
+| Role | Method | File |
+|---|---|---|
+| **Primary** | Hybrid fusion | `hybrid_fusion.py` → `hybrid_decision()` |
+| **Backup** | Rule-based thresholds | `decision_rules.py` → `make_decision()` |
+
+**Reason:** hybrid fusion matches rule-based accuracy on every test case, including all 8 borderline cases. Pure weighted fusion got only 3/8 because it dilutes strong single cues. Hybrid also keeps a continuous `drowsiness_score` that reflects combined evidence. Rule-based is the backup because it is the simplest method, gives the same states, and is the fastest at ≈0.9 µs per decision.
+
+**Midterm submission:** see [`midterm/`](midterm/), which has the [README presented at the evaluation](midterm/README_mid_evaluation.md), [executable code](midterm/code/), [latency / FPS](midterm/latency.md) and the [demo video link](midterm/demo_link.md).
+
 ## Where SG-5 sits in the pipeline
 
 ```
@@ -137,7 +150,7 @@ These sit just either side of the thresholds to find where methods break:
 
 | Test set | Rule-based | Weighted fusion | Hybrid fusion |
 |---|---|---|---|
-| Basic (6 cases) | 6/6 (100%) | 6/6 (100%) | — |
+| Basic (6 cases) | 6/6 (100%) | 6/6 (100%) | 6/6 (100%) |
 | Borderline (8 cases) | 8/8 (100%) | 3/8 (37.5%) | 8/8 (100%) |
 
 ### What this shows
@@ -186,6 +199,14 @@ These sit just either side of the thresholds to find where methods break:
 2. Run all cells in order. Cells 2, 3, 4, 5 and 10 must run before the cells that import from them, and Cell 8 must run before Cells 9, 11 and 12.
 3. Outputs print in the notebook; the final table is saved as `sg5_method_comparison.csv` in `/content/module_sg5`.
 
+Or run the standalone scripts (Python ≥ 3.8, standard library only):
+
+```bash
+cd module_sg5/midterm/code
+python run_evaluation.py        # all 3 methods on basic + borderline cases, writes sg5_method_comparison.csv
+python benchmark_latency.py     # per-decision latency of each method
+```
+
 ### Using a method directly
 
 ```python
@@ -203,12 +224,16 @@ if result["decision_valid"] and result["alarm_flag"]:
 - Add temporal smoothing / hysteresis to avoid flickering alarms.
 - Evaluate with more realistic metrics (per-class precision and recall, false-alarm rate, detection latency).
 
-
-# setup and run commands
-```
-
 ## Test Data
-_Which data in [`datasets/`](../datasets/) this uses, and how to get it._
+Hand-written mock SG-4 outputs: 6 basic cases (`mock_inputs.py`) and 8 borderline cases (`midterm/code/test_cases.py`). No dataset from [`datasets/`](../datasets/) is used yet.
 
 ## Current Performance
-_Latest metrics, the date measured and the dataset used._
+Measured 17 Nov 2026 on the mock test cases.
+- Accuracy: hybrid 6/6 basic and 8/8 borderline.
+- Latency: hybrid ≈1.7 µs per decision (p99 4.4 µs) on an Intel i7-1185G7 laptop CPU. See [`midterm/latency.md`](midterm/latency.md).
+
+## AI-generated / open-source code disclosure
+
+- **ChatGPT (OpenAI)** was used for help writing the code in `CV_Project_SG5.ipynb` and the decision-method scripts derived from it.
+- **Claude (Anthropic)** was used to convert the notebook into standalone scripts (`midterm/code/test_cases.py`, `run_evaluation.py`, `benchmark_latency.py`) and to format the midterm documentation. The decision logic is unchanged from the notebook.
+- Open-source code used: none.

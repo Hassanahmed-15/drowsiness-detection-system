@@ -1,0 +1,3 @@
+# The SG-5 scripts use only the Python standard library (Python >= 3.8).
+# pandas is needed only to run the original notebook (CV_Project_SG5.ipynb).
+pandas
