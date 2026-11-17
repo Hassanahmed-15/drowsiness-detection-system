@@ -1,0 +1,6 @@
+# Versions intentionally unpinned. After a working run, replace with: pip freeze > requirements.txt
+mediapipe
+opencv-python
+numpy
+pandas
+pyyaml
