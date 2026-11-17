@@ -176,7 +176,7 @@ if result["decision_valid"] and result["alarm_flag"]:
 | `code/sg5_method_comparison.csv` | Borderline comparison table |
 | `code/CV_Project_SG5.ipynb` | Original midterm notebook |
 | `latency.md` | Latency / FPS results |
-| `demo_link.md` | Demo video link |
+| `demo_video.mp4` | Demo video (real runs of the scripts above) |
 
 ## Next steps
 

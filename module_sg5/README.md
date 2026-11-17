@@ -1,4 +1,4 @@
-# SG-5: Drowsiness Decision Module
+﻿# SG-5: Drowsiness Decision Module
 
 SG-5 is the decision stage of the driver drowsiness detection pipeline. It takes the temporal eye and mouth measurements produced by SG-4 over a sliding window and classifies the driver's state as `NORMAL`, `WARNING` or `DROWSY`, raising an alarm when the driver is drowsy.
 
@@ -15,7 +15,7 @@ The notebook `CV_Project_SG5.ipynb` builds and tests SG-5 on its own, using mock
 
 **Reason:** hybrid fusion matches rule-based accuracy on every test case, including all 8 borderline cases. Pure weighted fusion got only 3/8 because it dilutes strong single cues. Hybrid also keeps a continuous `drowsiness_score` that reflects combined evidence. Rule-based is the backup because it is the simplest method, gives the same states, and is the fastest at ≈0.9 µs per decision.
 
-**Midterm submission:** see [`midterm/`](midterm/), which has the [README presented at the evaluation](midterm/README_mid_evaluation.md), [executable code](midterm/code/), [latency / FPS](midterm/latency.md) and the [demo video link](midterm/demo_link.md).
+**Midterm submission:** see [`midterm/`](midterm/), which has the [README presented at the evaluation](midterm/README_mid_evaluation.md), [executable code](midterm/code/), [latency / FPS](midterm/latency.md) and the [demo video](midterm/demo_video.mp4).
 
 ## Where SG-5 sits in the pipeline
 
