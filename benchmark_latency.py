@@ -137,6 +137,7 @@ def main():
     here = os.path.dirname(os.path.abspath(__file__))
     out_path = args.out or os.path.join(here, "latency.md")
 
+
     rows = []
     video_info = None
     for name, conf in CONFIGS:
