@@ -1,0 +1,215 @@
+{
+  "generated_at": "2026-10-28T08:20:00.885558+00:00",
+  "host": {
+    "model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+    "platform": "Linux-5.15.148-tegra-aarch64-with-glibc2.35",
+    "os_release": "PRETTY_NAME=\"Ubuntu 22.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"22.04\"\nVERSION=\"22.04.5 LTS (Jammy Jellyfish)\"\nVERSION_CODENAME=jammy\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=jammy",
+    "l4t_release": "# R36 (release), REVISION: 4.7, GCID: 42132812, BOARD: generic, EABI: aarch64, DATE: Thu Sep 18 22:54:44 UTC 2025\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia",
+    "python_version": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "python_executable": "/usr/bin/python3",
+    "memory_info": "MemTotal:        7802684 kB\nMemFree:         1351232 kB\nMemAvailable:    3602672 kB\nBuffers:           72884 kB\nCached:          2314732 kB\nSwapCached:           52 kB\nActive:          1211532 kB\nInactive:        4338820 kB\nActive(anon):      27732 kB\nInactive(anon):  3207776 kB\nActive(file):    1183800 kB\nInactive(file):  1131044 kB\nUnevictable:       35436 kB\nMlocked:              32 kB\nSwapTotal:       3901320 kB\nSwapFree:        3868808 kB\nDirty:               352 kB\nWriteback:             0 kB\nAnonPages:       3048668 kB\nMapped:           722656 kB\nShmem:             37360 kB\nKReclaimable:     139500 kB\nSlab:             263580 kB\nSReclaimable:     139500 kB\nSUnreclaim:       124080 kB\nKernelStack:       16300 kB\nPageTables:        51136 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     7802660 kB\nCommitted_AS:   15227732 kB\nVmallocTotal:   133143592960 kB\nVmallocUsed:       69996 kB\nVmallocChunk:          0 kB\nPercpu:             5136 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:    667648 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:         262144 kB\nCmaFree:            9792 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB",
+    "disk_bytes": {
+      "total": 61133864960,
+      "used": 29147955200,
+      "free": 29257961472
+    },
+    "uid": 1000,
+    "groups": [
+      "adm",
+      "cdrom",
+      "sudo",
+      "audio",
+      "dip",
+      "video",
+      "plugdev",
+      "render",
+      "i2c",
+      "lpadmin",
+      "gdm",
+      "sambashare",
+      "weston-launch",
+      "gpio",
+      "sanan"
+    ]
+  },
+  "opencv": {
+    "available": true,
+    "version": "4.5.4",
+    "gstreamer_build": "GStreamer:                   YES (1.19.90)",
+    "cuda_device_count": 0
+  },
+  "commands": {
+    "uname": {
+      "available": true,
+      "returncode": 0,
+      "output": "Linux sanan-desktop 5.15.148-tegra #1 SMP PREEMPT Thu Sep 18 15:08:33 PDT 2025 aarch64 aarch64 aarch64 GNU/Linux",
+      "error": null
+    },
+    "lsusb": {
+      "available": true,
+      "returncode": 0,
+      "output": "Bus 002 Device 002: ID 0bda:0489 Realtek Semiconductor Corp. 4-Port USB 3.0 Hub\nBus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub\nBus 001 Device 003: ID 13d3:3549 IMC Networks Bluetooth Radio\nBus 001 Device 005: ID 046d:c52b Logitech, Inc. Unifying Receiver\nBus 001 Device 006: ID 09da:2692 A4Tech Co., Ltd. A4tech FHD 1080P PC Camera\nBus 001 Device 004: ID 258a:013b Sino Wealth USB Keyboard\nBus 001 Device 002: ID 0bda:5489 Realtek Semiconductor Corp. 4-Port USB 2.0 Hub\nBus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub",
+      "error": null
+    },
+    "v4l2_list_devices": {
+      "available": false,
+      "output": null,
+      "error": "Not installed or not in PATH"
+    },
+    "gst_version": {
+      "available": true,
+      "returncode": 0,
+      "output": "gst-launch-1.0 version 1.20.3\nGStreamer 1.20.3\nhttps://launchpad.net/distros/ubuntu/+source/gstreamer1.0",
+      "error": null
+    },
+    "gst_argus_plugin": {
+      "available": true,
+      "returncode": 0,
+      "output": "Factory Details:\n  Rank                     primary (256)\n  Long-name                NvArgusCameraSrc\n  Klass                    Video/Capture\n  Description              nVidia ARGUS Camera Source\n  Author                   Viranjan Pagar <vpagar@nvidia.com>, Amit Pandya <apandya@nvidia.com>\n\nPlugin Details:\n  Name                     nvarguscamerasrc\n  Description              nVidia ARGUS Source Component\n  Filename                 /usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstnvarguscamerasrc.so\n  Version                  1.0.0\n  License                  Proprietary\n  Source module            nvarguscamerasrc\n  Binary package           NvARGUSCameraSrc\n  Origin URL               http://nvidia.com/\n\nGObject\n +----GInitiallyUnowned\n       +----GstObject\n             +----GstElement\n                   +----GstBaseSrc\n                         +----GstNvArgusCameraSrc\n\nPad Templates:\n  SRC template: 'src'\n    Availability: Always\n    Capabilities:\n      video/x-raw(memory:NVMM)\n                  width: [ 1, 2147483647 ]\n                 height: [ 1, 2147483647 ]\n                 format: { (string)NV12 }\n              framerate: [ 0/1, 2147483647/1 ]\n\nElement has no clocking capabilities.\nElement has no URI handling capabilities.\n\nPads:\n  SRC: 'src'\n    Pad Template: 'src'\n\nElement Properties:\n  acquire-wait        : Set the waiting time for the acquireFrame before timeout. Default 5000000000 (in nanosec)\n                        flags: readable, writable\n                        Unsigned Integer64. Range: 5000000000 - 18446744073709551615 Default: 5000000000 \n  aeantibanding       : property to set the auto exposure antibanding mode\n                        flags: readable, writable\n                        Enum \"GstNvArgusCamAeAntiBandingMode\" Default: 1, \"AeAntibandingMode_Auto\"\n                           (0): AeAntibandingMode_Off - GST_NVCAM_AEANTIBANDING_OFF\n                           (1): AeAntibandingMode_Auto - GST_NVCAM_AEANTIBANDING_AUTO\n                           (2): AeAntibandingMode_50HZ - GST_NVCAM_AEANTIBANDING_50HZ\n                           (3): AeAntibandingMode_60HZ - GST_NVCAM_AEANTIBANDING_60HZ\n  aelock              : set or unset the auto exposure lock\n                        flags: readable, writable\n                        Boolean. Default: false\n  aeregion            : Property to set region of interest for auto exposure\n\t\t\twith values of ROI coordinates (left, top, right, bottom)\n\t\t\tand weight (float number) in that order, to set the property\n\t\t\tuse for example: aeregion=\"0 0 256 256 1\"\n                        flags: readable, writable\n                        String. Default: null\n  awblock             : set or unset the auto white balance lock\n                        flags: readable, writable\n                        Boolean. Default: false\n  blocksize           : Size in bytes to read per buffer (-1 = default)\n                        flags: readable, writable\n                        Unsigned Integer. Range: 0 - 4294967295 Default: 4096 \n  do-timestamp        : Apply current stream time to buffers\n                        flags: readable, writable\n                        Boolean. Default: true\n  ee-mode             : property to select edge enhnacement mode\n                        flags: readable, writable\n                        Enum \"GstNvArgusCamEEMode\" Default: 1, \"EdgeEnhancement_Fast\"\n                           (0): EdgeEnhancement_Off - GST_NVCAM_EE_OFF\n                           (1): EdgeEnhancement_Fast - GST_NVCAM_EE_FAST\n                           (2): EdgeEnhancement_HighQuality - GST_NVCAM_EE_HIGHQUALITY\n  ee-strength         : property to adjust edge enhancement strength\n                        flags: readable, writable\n                        Float. Range:              -1 -               1 Default:              -1 \n  event-wait          : Set the waiting time for the event before timeout. Default 3000000000 (in nanosec)\n                        flags: readable, writable\n                        Unsigned Integer64. Range: 3000000000 - 18446744073709551615 Default: 3000000000 \n  exposurecompensation: property to adjust exposure compensation\n                        flags: readable, writable\n                        Float. Range:              -2 -               2 Default:               0 \n  exposuretimerange   : Property to adjust exposure time range in nanoseconds\n\t\t\tUse string with values of Exposure Time Range (low, high)\n\t\t\tin that order, to set the property.\n\t\t\teg: exposuretimerange=\"34000 358733000\"\n                        flags: readable, writable\n                        String. Default: null\n  gainrange           : Property to adjust gain range\n\t\t\tUse string with values of Gain Time Range (low, high)\n\t\t\tin that order, to set the property.\n\t\t\teg: gainrange=\"1 16\"\n                        flags: readable, writable\n                        String. Default: null\n  ispdigitalgainrange : Property to adjust digital gain range\n\t\t\tUse string with values of ISP Digital Gain Range (low, high)\n\t\t\tin that order, to set the property.\n\t\t\teg: ispdigitalgainrange=\"1 8\"\n                        flags: readable, writable\n                        String. Default: null\n  name                : The name of the object\n                        flags: readable, writable, 0x2000\n                        String. Default: \"nvarguscamerasrc0\"\n  num-buffers         : Number of buffers to output before sending EOS (-1 = unlimited)\n                        flags: readable, writable\n                        Integer. Range: -1 - 2147483647 Default: -1 \n  parent              : The parent of the object\n                        flags: readable, writable, 0x2000\n                        Object of type \"GstObject\"\n  saturation          : Property to adjust saturation value\n                        flags: readable, writable\n                        Float. Range:               0 -               2 Default:               1 \n  sensor-id           : Set the id of camera sensor to use. Default 0.\n                        flags: readable, writable\n                        Integer. Range: 0 - 255 Default: 0 \n  sensor-mode         : Set the camera sensor mode to use. Default -1 (Select the best match)\n                        flags: readable, writable\n                        Integer. Range: -1 - 255 Default: -1 \n  show-latency        : Show capture latency between start of frame and GstBuffer push\n                        flags: readable, writable\n                        Boolean. Default: false\n  silent              : Produce verbose output ?\n                        flags: readable, writable\n                        Boolean. Default: true\n  timeout             : timeout to capture in seconds (Either specify timeout or num-buffers, not both)\n                        flags: readable, writable\n                        Unsigned Integer. Range: 0 - 2147483647 Default: 0 \n  tnr-mode            : property to select temporal noise reduction mode\n                        flags: readable, writable\n                        Enum \"GstNvArgusCamTNRMode\" Default: 1, \"NoiseReduction_Fast\"\n                           (0): NoiseReduction_Off - GST_NVCAM_NR_OFF\n                           (1): NoiseReduction_Fast - GST_NVCAM_NR_FAST\n                           (2): NoiseReduction_HighQuality - GST_NVCAM_NR_HIGHQUALITY\n  tnr-strength        : property to adjust temporal noise reduction strength\n                        flags: readable, writable\n                        Float. Range:              -1 -               1 Default:              -1 \n  total-sensor-modes  : Query the number of sensor modes available. Default 0\n                        flags: readable\n                        Integer. Range: 0 - 255 Default: 0 \n  typefind            : Run typefind before negotiating (deprecated, non-functional)\n                        flags: readable, writable, deprecated\n                        Boolean. Default: false\n  wbmode              : White balance affects the color temperature of the photo\n                        flags: readable, writable\n                        Enum \"GstNvArgusCamWBMode\" Default: 1, \"auto\"\n                           (0): off              - GST_NVCAM_WB_MODE_OFF\n                           (1): auto             - GST_NVCAM_WB_MODE_AUTO\n                           (2): incandescent     - GST_NVCAM_WB_MODE_INCANDESCENT\n                           (3): fluorescent      - GST_NVCAM_WB_MODE_FLUORESCENT\n                           (4): warm-fluorescent - GST_NVCAM_WB_MODE_WARM_FLUORESCENT\n                           (5): daylight         - GST_NVCAM_WB_MODE_DAYLIGHT\n                           (6): cloudy-daylight  - GST_NVCAM_WB_MODE_CLOUDY_DAYLIGHT\n                           (7): twilight         - GST_NVCAM_WB_MODE_TWILIGHT\n                           (8): shade            - GST_NVCAM_WB_MODE_SHADE\n                           (9): manual           - GST_NVCAM_WB_MODE_MANUAL",
+      "error": null
+    },
+    "argus_service": {
+      "available": true,
+      "returncode": 0,
+      "output": "active",
+      "error": null
+    },
+    "l4t_package": {
+      "available": true,
+      "returncode": 0,
+      "output": "36.4.7-20250918154033",
+      "error": null
+    },
+    "jetpack_package": {
+      "available": true,
+      "returncode": 1,
+      "output": "",
+      "error": "dpkg-query: no packages found matching nvidia-jetpack"
+    },
+    "nvcc_version": {
+      "available": false,
+      "output": null,
+      "error": "Not installed or not in PATH"
+    }
+  },
+  "camera": {
+    "video_devices": [
+      {
+        "path": "/dev/video0",
+        "mode": "0o660",
+        "owner_uid": 0,
+        "group": "video",
+        "readable": true,
+        "writable": true,
+        "sysfs_name": "A4tech FHD 1080P PC Camera: A4t",
+        "sysfs_device": "/sys/devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.3/1-2.3:1.0"
+      },
+      {
+        "path": "/dev/video1",
+        "mode": "0o660",
+        "owner_uid": 0,
+        "group": "video",
+        "readable": true,
+        "writable": true,
+        "sysfs_name": "A4tech FHD 1080P PC Camera: A4t",
+        "sysfs_device": "/sys/devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.3/1-2.3:1.0"
+      }
+    ],
+    "media_devices": [
+      {
+        "path": "/dev/media0",
+        "mode": "0o660",
+        "owner_uid": 0,
+        "group": "video",
+        "readable": true,
+        "writable": true,
+        "sysfs_name": null,
+        "sysfs_device": null
+      },
+      {
+        "path": "/dev/media1",
+        "mode": "0o660",
+        "owner_uid": 0,
+        "group": "video",
+        "readable": true,
+        "writable": true,
+        "sysfs_name": null,
+        "sysfs_device": null
+      }
+    ],
+    "nvcsi_control": {
+      "path": "/dev/nvhost-ctrl-nvcsi",
+      "mode": "0o660",
+      "owner_uid": 0,
+      "group": "video",
+      "readable": true,
+      "writable": true,
+      "sysfs_name": null,
+      "sysfs_device": null
+    },
+    "note": "Video/media nodes and Argus plugin do not prove a usable camera; nodes may be non-capture devices."
+  },
+  "checks": [
+    {
+      "status": "PASS",
+      "name": "Board",
+      "detail": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super"
+    },
+    {
+      "status": "PASS",
+      "name": "Python",
+      "detail": "3.10.12 (/usr/bin/python3)"
+    },
+    {
+      "status": "PASS",
+      "name": "OpenCV",
+      "detail": "4.5.4"
+    },
+    {
+      "status": "PASS",
+      "name": "GStreamer",
+      "detail": "gst-launch-1.0 version 1.20.3\nGStreamer 1.20.3\nhttps://launchpad.net/distros/ubuntu/+source/gstreamer1.0"
+    },
+    {
+      "status": "PASS",
+      "name": "Argus GStreamer plugin",
+      "detail": "available"
+    },
+    {
+      "status": "PASS",
+      "name": "USB enumeration",
+      "detail": "available; see JSON"
+    },
+    {
+      "status": "WARN",
+      "name": "v4l2-ctl",
+      "detail": "not installed; device capabilities and interface cannot be confirmed"
+    },
+    {
+      "status": "PASS",
+      "name": "Video device access",
+      "detail": "2 device node(s), 2 readable and writable; capture capability and frames not yet verified"
+    },
+    {
+      "status": "PASS",
+      "name": "/dev/video0",
+      "detail": "name=A4tech FHD 1080P PC Camera: A4t, group=video, read=True, write=True"
+    },
+    {
+      "status": "PASS",
+      "name": "/dev/video1",
+      "detail": "name=A4tech FHD 1080P PC Camera: A4t, group=video, read=True, write=True"
+    },
+    {
+      "status": "WARN",
+      "name": "OpenCV CUDA",
+      "detail": "0 CUDA-enabled device(s) reported by OpenCV; this does not establish system-wide CUDA availability"
+    },
+    {
+      "status": "WARN",
+      "name": "Camera capture",
+      "detail": "Not tested in this inventory; successful device access and live frames require a separate capture test"
+    }
+  ],
+  "phase_1_ready_for_capture": true
+}
